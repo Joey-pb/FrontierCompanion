@@ -34,6 +34,10 @@ android {
 }
 
 dependencies {
+    // Room DB
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
