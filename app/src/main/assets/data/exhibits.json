@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Irish Forge",
+    "latitude": 38.12312,
+    "longitude": -79.05086,
+    "description": "A rural blacksmith shop.",
+    "era": "1750s",
+    "location": "County Fermanagh, Ulster"
+  },
+  {
+    "name": "West Africa",
+    "latitude": 38.12421,
+    "longitude": -79.05197,
+    "description": "A recreated Igbo compound.",
+    "era": "1700s",
+    "location": "Igboland, West Africa"
+
+  },
+  {
+    "name": "England",
+    "latitude": 38.12363,
+    "longitude": 79.05158,
+    "description": "The Yeoman Farmhouse.",
+    "era": "1650s",
+    "location": "Worcestershire, England"
+  },
+  {
+    "name": "Irish Farmhouse",
+    "latitude": 38.12309,
+    "longitude": -79.05001,
+    "description": "Irish Protestants living in Ulster.",
+    "era": "1750s",
+    "location": "County Tyrone, Ulster"
+  },
+  {
+    "name": "Germany",
+    "latitude": 38.1234,
+    "longitude": 79.04803,
+    "description": "The German farmhouse.",
+    "era": "1750s,",
+    "location": "Hördt, Holy Roman Empire"
+  }
+]
