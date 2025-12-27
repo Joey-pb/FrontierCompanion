@@ -16,17 +16,22 @@ public class ExhibitPanel {
     private String title;
     @ColumnInfo(name = "content")
     private String content;
+    @ColumnInfo(name = "content_position")
+    private String contentPosition;
     @ColumnInfo(name = "image_path")
     private String imagePath;
     @ColumnInfo(name = "panel_type")
     private String panelType;
 
-    public ExhibitPanel(long id, long exhibitId, int panelOrder, String title, String content, String imagePath, String panelType) {
+    public ExhibitPanel(long id, long exhibitId, int panelOrder,
+                        String title, String content, String contentPosition,
+                        String imagePath, String panelType) {
         this.id = id;
         this.exhibitId = exhibitId;
         this.panelOrder = panelOrder;
         this.title = title;
         this.content = content;
+        this.contentPosition = contentPosition;
         this.imagePath = imagePath;
         this.panelType = panelType;
     }
@@ -69,6 +74,14 @@ public class ExhibitPanel {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getContentPosition() {
+        return contentPosition;
+    }
+
+    public void setContentPosition(String contentPosition) {
+        this.contentPosition = contentPosition;
     }
 
     public String getImagePath() {

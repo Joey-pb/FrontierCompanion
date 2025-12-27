@@ -24,8 +24,7 @@ public interface ExhibitPanelDao {
     void insertAll(List<ExhibitPanel> exhibitPanels);
 
     // Search
-    @Query("SELECT * FROM exhibit_panel WHERE title like '%' " +
-            "|| :query || '%' OR content LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM exhibit_panel WHERE content LIKE '%' || :query || '%'")
     List<ExhibitPanel> searchExhibitPanels(String query);
 
 }
