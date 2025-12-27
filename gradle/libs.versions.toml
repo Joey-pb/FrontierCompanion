@@ -8,6 +8,7 @@ material = "1.13.0"
 activity = "1.12.1"
 constraintlayout = "2.2.1"
 room = "2.8.4"
+gson = "2.8.9"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -19,6 +20,7 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room"}
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
