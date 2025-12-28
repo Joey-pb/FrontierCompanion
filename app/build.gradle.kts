@@ -50,6 +50,9 @@ dependencies {
     // GSON
     implementation(libs.gson)
 
+    // Mockito
+    testImplementation(libs.mockito)
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
