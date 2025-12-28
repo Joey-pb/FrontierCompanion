@@ -2,6 +2,7 @@ package wgu.jbas127.frontiercompanion.data.repository;
 
 import android.app.Application;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
@@ -29,13 +30,36 @@ public class ExhibitRepository {
         this.articleDao = db.ArticleDao();
     }
 
+    @VisibleForTesting
+    public ExhibitRepository(ExhibitDao exhibitDao, ExhibitPanelDao exhibitPanelDao, ArticleDao articleDao) {
+        this.exhibitDao = exhibitDao;
+        this.panelDao = exhibitPanelDao;
+        this.articleDao = articleDao;
+    }
+
     // Exhibits
     public LiveData<List<Exhibit>> getAllExhibits() {
         return exhibitDao.getAllExhibits();
     }
 
+    public List<Exhibit> getAllExhibitsSync() {
+        return exhibitDao.getAllExhibitsSync();
+    }
+
     public LiveData<Exhibit> getExhibit(long id) {
         return exhibitDao.getExhibitById(id);
+    }
+
+    public Exhibit getExhibitSync(long id) {
+        return exhibitDao.getExhibitByIdSync(id);
+    }
+
+    public long insert(Exhibit exhibit) {
+       return exhibitDao.insert(exhibit);
+    }
+
+    public void insertAll(List<Exhibit> exhibits) {
+        exhibitDao.insertAll(exhibits);
     }
 
     // Exhibit panels
