@@ -21,8 +21,7 @@ public class Exhibit {
     @ColumnInfo (name = "location")
     private String location;
 
-    public Exhibit(long id, String name, double latitude, double longitude, String description, String era, String location) {
-        this.id = id;
+    public Exhibit(String name, double latitude, double longitude, String description, String era, String location) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
