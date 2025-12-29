@@ -27,8 +27,8 @@ public class ExhibitRepository {
         AppDatabase db = AppDatabase.getInstance(application);
 
         this.exhibitDao = db.exhibitDao();
-        this.panelDao = db.ExhibitPanelDao();
-        this.articleDao = db.ArticleDao();
+        this.panelDao = db.exhibitPanelDao();
+        this.articleDao = db.articleDao();
     }
 
     @VisibleForTesting
