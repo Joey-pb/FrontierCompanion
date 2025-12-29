@@ -6,11 +6,13 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
 
 import wgu.jbas127.frontiercompanion.data.entities.Exhibit;
+import wgu.jbas127.frontiercompanion.data.entities.ExhibitWithContent;
 
 @Dao
 public interface ExhibitDao {
@@ -26,6 +28,10 @@ public interface ExhibitDao {
 
     @Query("SELECT * FROM exhibit WHERE id = :id")
     Exhibit getExhibitByIdSync(long id);
+
+    @Transaction
+    @Query("SELECT * FROM exhibit WHERE id = :id")
+    public LiveData<ExhibitWithContent> getExhibitWithContent(long id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<Exhibit> exhibits);
