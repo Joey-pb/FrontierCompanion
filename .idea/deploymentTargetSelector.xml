@@ -8,10 +8,10 @@
       <SelectionState runConfigName="Tests in 'wgu.jbas127.frontiercompanion'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ExhibitDaoTests">
+      <SelectionState runConfigName="ExhibitRepositoryTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="MainActivity">
+      <SelectionState runConfigName="AppDatabaseTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
