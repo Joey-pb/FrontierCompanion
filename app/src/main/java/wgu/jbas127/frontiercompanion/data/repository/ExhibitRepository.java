@@ -121,7 +121,6 @@ public class ExhibitRepository {
                     .findFirst().ifPresent(exhibit -> results.add(new SearchResult(
                             SearchResult.TYPE_PANEL,
                             exhibit.getId(),
-                            panel.getTitle(),
                             "From" + exhibit.getName(),
                             "Content"
                     )));
