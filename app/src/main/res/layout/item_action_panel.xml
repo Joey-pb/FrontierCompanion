@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="exhibit"
+            type="wgu.jbas127.frontiercompanion.data.entities.Exhibit" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Related Articles"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_articles"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                tools:listitem="@layout/item_article_grid" />
+
+            <Button
+                android:id="@+id/button_locate_map_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Show on Map" />
+
+            <Button
+                android:id="@+id/button_create_route_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create Route" />
+
+            <Button
+                android:id="@+id/button_back_to_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Back to Top" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
