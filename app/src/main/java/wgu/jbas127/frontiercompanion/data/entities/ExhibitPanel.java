@@ -2,9 +2,14 @@ package wgu.jbas127.frontiercompanion.data.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "exhibit_panel")
+@Entity(tableName = "exhibit_panel",
+        foreignKeys = @ForeignKey(entity = Exhibit.class,
+        parentColumns = "id",
+        childColumns = "exhibit_id",
+        onDelete = ForeignKey.CASCADE))
 public class ExhibitPanel {
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -12,28 +17,21 @@ public class ExhibitPanel {
     private long exhibitId;
     @ColumnInfo(name = "panel_order")
     private int panelOrder;
-    @ColumnInfo(name = "title")
-    private String title;
     @ColumnInfo(name = "content")
     private String content;
     @ColumnInfo(name = "content_position")
     private String contentPosition;
-    @ColumnInfo(name = "image_path")
-    private String imagePath;
-    @ColumnInfo(name = "panel_type")
-    private String panelType;
+    @ColumnInfo(name = "image_res_name")
+    private String imageResName;
 
     public ExhibitPanel(long id, long exhibitId, int panelOrder,
-                        String title, String content, String contentPosition,
-                        String imagePath, String panelType) {
+                         String content, String contentPosition, String imageResName) {
         this.id = id;
         this.exhibitId = exhibitId;
         this.panelOrder = panelOrder;
-        this.title = title;
         this.content = content;
         this.contentPosition = contentPosition;
-        this.imagePath = imagePath;
-        this.panelType = panelType;
+        this.imageResName = imageResName;
     }
 
     public long getId() {
@@ -60,14 +58,6 @@ public class ExhibitPanel {
         this.panelOrder = panelOrder;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getContent() {
         return content;
     }
@@ -84,19 +74,11 @@ public class ExhibitPanel {
         this.contentPosition = contentPosition;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getImageResName() {
+        return imageResName;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
-    public String getPanelType() {
-        return panelType;
-    }
-
-    public void setPanelType(String panelType) {
-        this.panelType = panelType;
+    public void setImageResName(String imageResName) {
+        this.imageResName = imageResName;
     }
 }
