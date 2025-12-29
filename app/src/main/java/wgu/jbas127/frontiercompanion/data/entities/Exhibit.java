@@ -12,22 +12,28 @@ public class Exhibit {
     private String name;
     @ColumnInfo(name = "latitude")
     private double latitude;
-    @ColumnInfo (name = "longitude")
+    @ColumnInfo(name = "longitude")
     private double longitude;
-    @ColumnInfo (name = "description")
+    @ColumnInfo(name = "description")
     private String description;
-    @ColumnInfo (name = "era")
+    @ColumnInfo(name = "era")
     private String era;
-    @ColumnInfo (name = "location")
+    @ColumnInfo(name = "location")
     private String location;
 
-    public Exhibit(String name, double latitude, double longitude, String description, String era, String location) {
+    @ColumnInfo(name = "image_res_name")
+    private String imageResName;
+
+    public Exhibit(String name, double latitude, double longitude,
+                   String description, String era, String location,
+                   String imageResName) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
         this.era = era;
         this.location = location;
+        this.imageResName = imageResName;
     }
 
     public long getId() {
@@ -84,6 +90,14 @@ public class Exhibit {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void setImageResName(String imageResName) {
+        this.imageResName = imageResName;
+    }
+
+    public String getImageResName() {
+        return imageResName;
     }
 }
 
