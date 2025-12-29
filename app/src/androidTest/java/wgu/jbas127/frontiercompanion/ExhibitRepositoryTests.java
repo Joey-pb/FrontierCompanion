@@ -2,7 +2,6 @@ package wgu.jbas127.frontiercompanion;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -44,11 +43,11 @@ public class ExhibitRepositoryTests {
     }
 
     private void populateDbForTesting() {
-        repository.insert(new Exhibit("Exhibit 1", 38.0, -79.0, "Desc 1", "1700s", "Location 1"));
-        repository.insert(new Exhibit("Exhibit 2", 38.1, -79.1, "Desc 2", "1800s", "Location 2"));
-        repository.insert(new Exhibit("Exhibit 3", 38.2, -79.2, "Desc 3", "1800s", "Location 3"));
-        repository.insert(new Exhibit("Exhibit 4", 38.3, -79.3, "Desc 4", "1700s", "Location 4"));
-        repository.insert(new Exhibit("Exhibit 5", 38.4, -79.4, "Desc 5", "1800s", "Location 5"));
+        repository.insert(new Exhibit("Exhibit 1", 38.0, -79.0, "Desc 1", "1700s", "Location 1", "exhibit_1_bg"));
+        repository.insert(new Exhibit("Exhibit 2", 38.1, -79.1, "Desc 2", "1800s", "Location 2", "exhibit_2_bg"));
+        repository.insert(new Exhibit("Exhibit 3", 38.2, -79.2, "Desc 3", "1800s", "Location 3", "exhibit_3_bg"));
+        repository.insert(new Exhibit("Exhibit 4", 38.3, -79.3, "Desc 4", "1700s", "Location 4", "exhibit_4_bg"));
+        repository.insert(new Exhibit("Exhibit 5", 38.4, -79.4, "Desc 5", "1800s", "Location 5", "exhibit_5_bg"));
     }
 
     @After
@@ -92,7 +91,8 @@ public class ExhibitRepositoryTests {
                 -79.05678,
                 "Desc 6",
                 "2000s",
-                "Location 6"
+                "Location 6",
+                "exhibit_6_bg"
 
         );
 

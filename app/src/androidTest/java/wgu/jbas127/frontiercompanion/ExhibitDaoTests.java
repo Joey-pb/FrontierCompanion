@@ -1,7 +1,6 @@
 package wgu.jbas127.frontiercompanion;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -14,12 +13,9 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
-import wgu.jbas127.frontiercompanion.data.dao.ArticleDao;
 import wgu.jbas127.frontiercompanion.data.dao.ExhibitDao;
-import wgu.jbas127.frontiercompanion.data.dao.ExhibitPanelDao;
 import wgu.jbas127.frontiercompanion.data.database.AppDatabase;
 import wgu.jbas127.frontiercompanion.data.entities.Exhibit;
 
@@ -42,11 +38,11 @@ public class ExhibitDaoTests {
     }
 
     private void populateDbForTesting() {
-        exhibitDao.insert(new Exhibit("Exhibit 1", 38.0, -79.0, "Desc 1", "1700s", "Location 1"));
-        exhibitDao.insert(new Exhibit("Exhibit 2", 38.1, -79.1, "Desc 2", "1800s", "Location 2"));
-        exhibitDao.insert(new Exhibit("Exhibit 3", 38.2, -79.2, "Desc 3", "1800s", "Location 3"));
-        exhibitDao.insert(new Exhibit("Exhibit 4", 38.3, -79.3, "Desc 4", "1700s", "Location 4"));
-        exhibitDao.insert(new Exhibit("Exhibit 5", 38.4, -79.4, "Desc 5", "1800s", "Location 5"));
+        exhibitDao.insert(new Exhibit("Exhibit 1", 38.0, -79.0, "Desc 1", "1700s", "Location 1", "exhibit_1_bg"));
+        exhibitDao.insert(new Exhibit("Exhibit 2", 38.1, -79.1, "Desc 2", "1800s", "Location 2", "exhibit_2_bg"));
+        exhibitDao.insert(new Exhibit("Exhibit 3", 38.2, -79.2, "Desc 3", "1800s", "Location 3", "exhibit_3_bg"));
+        exhibitDao.insert(new Exhibit("Exhibit 4", 38.3, -79.3, "Desc 4", "1700s", "Location 4", "exhibit_4_bg"));
+        exhibitDao.insert(new Exhibit("Exhibit 5", 38.4, -79.4, "Desc 5", "1800s", "Location 5", "exhibit_5_bg"));
     }
 
 
@@ -105,7 +101,8 @@ public class ExhibitDaoTests {
                 -79.05678,
                 "Desc 6",
                 "2000s",
-                "Location 6"
+                "Location 6",
+                "exhibit_6_bg"
         );
 
         long testExhibitId = exhibitDao.insert(testExhibit);

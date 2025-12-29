@@ -18,7 +18,6 @@ import wgu.jbas127.frontiercompanion.data.dao.ArticleDao;
 import wgu.jbas127.frontiercompanion.data.dao.ExhibitDao;
 import wgu.jbas127.frontiercompanion.data.dao.ExhibitPanelDao;
 import wgu.jbas127.frontiercompanion.data.entities.Exhibit;
-import wgu.jbas127.frontiercompanion.data.models.SearchResult;
 import wgu.jbas127.frontiercompanion.data.repository.ExhibitRepository;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,7 +35,7 @@ public class ExhibitRepositoryUnitTests {
 
     @Before
     public void setUp() {
-        fakeExhibit = new Exhibit("Mock Exhibit", 38.0, -79.0, "Desc 1", "1700s", "Location 1");
+        fakeExhibit = new Exhibit("Mock Exhibit", 38.0, -79.0, "Desc 1", "1700s", "Location 1", "mock_exhibit_bg");
         fakeExhibit.setId(1L);
     }
 
@@ -66,7 +65,7 @@ public class ExhibitRepositoryUnitTests {
 
     @Test
     public void getAllExhibitsSync_whenDaoReturnsList_repositoryReturnsList() {
-        List<Exhibit> fakeList = Arrays.asList(fakeExhibit, new Exhibit("Exhibit 2", 0,0,"","",""));
+        List<Exhibit> fakeList = Arrays.asList(fakeExhibit, new Exhibit("Exhibit 2", 0,0,"","","", ""));
         when(mockExhibitDao.getAllExhibitsSync()).thenReturn(fakeList);
 
         List<Exhibit> result = repository.getAllExhibitsSync();
