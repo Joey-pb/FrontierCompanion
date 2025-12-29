@@ -11,6 +11,7 @@ import java.util.List;
 import wgu.jbas127.frontiercompanion.data.entities.Article;
 import wgu.jbas127.frontiercompanion.data.entities.Exhibit;
 import wgu.jbas127.frontiercompanion.data.entities.ExhibitPanel;
+import wgu.jbas127.frontiercompanion.data.entities.ExhibitWithContent;
 import wgu.jbas127.frontiercompanion.data.repository.ExhibitRepository;
 
 public class ExhibitDetailViewModel extends ViewModel {
@@ -24,16 +25,12 @@ public class ExhibitDetailViewModel extends ViewModel {
     public final LiveData<Boolean> isLoading = _isLoading;
 
     // -- OUTPUT --
-    public final LiveData<Exhibit> selectedExhibit;
-    public final LiveData<List<ExhibitPanel>> panelList;
-    public final LiveData<List<Article>> articleList;
+    public final LiveData<ExhibitWithContent> selectedExhibit;
 
     public ExhibitDetailViewModel(ExhibitRepository exhibitRepository) {
         this.exhibitRepository = exhibitRepository;
 
-        selectedExhibit = Transformations.switchMap(exhibitId, exhibitRepository::getExhibit);
-        panelList = Transformations.switchMap(exhibitId, exhibitRepository::getPanelsForExhibit);
-        articleList = Transformations.switchMap(exhibitId, exhibitRepository::getActiveArticlesForExhibit);
+        selectedExhibit = Transformations.switchMap(exhibitId, exhibitRepository::getExhibitWithContent);
     }
 
     public void loadExhibitData(long id) {
@@ -43,19 +40,14 @@ public class ExhibitDetailViewModel extends ViewModel {
 
         _isLoading.setValue(true);
         _isLoading.addSource(selectedExhibit, exhibit -> checkLoadingStatus());
-        _isLoading.addSource(panelList, exhibitPanels -> checkLoadingStatus());
-        _isLoading.addSource(articleList, articles -> checkLoadingStatus());
 
         exhibitId.setValue(id);
     }
 
     private void checkLoadingStatus() {
-        if (selectedExhibit.getValue() != null && panelList.getValue() != null && articleList.getValue() != null) {
+        if (selectedExhibit != null) {
             _isLoading.setValue(false);
-
             _isLoading.removeSource(selectedExhibit);
-            _isLoading.removeSource(panelList);
-            _isLoading.removeSource(articleList);
         }
     }
 
