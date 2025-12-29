@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="exhibit"
+            type="wgu.jbas127.frontiercompanion.data.entities.Exhibit" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@{exhibit.imageResName}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/text_exhibit_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:text="@{exhibit.name}"
+            app:layout_constraintBottom_toTopOf="@id/button_locate_map"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Irish Forge"/>
+
+        <Button
+            android:id="@+id/button_locate_map"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Locate on Map"
+            app:layout_constraintBottom_toTopOf="@id/button_create_route"
+            app:layout_constraintEnd_toEndOf="@id/text_exhibit_name"
+            app:layout_constraintStart_toStartOf="@id/text_exhibit_name"
+            app:layout_constraintTop_toBottomOf="@id/text_exhibit_name" />
+
+        <Button
+            android:id="@+id/button_create_route"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Create Route"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/button_locate_map"
+            app:layout_constraintStart_toStartOf="@id/button_locate_map"
+            app:layout_constraintTop_toBottomOf="@id/button_locate_map" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
