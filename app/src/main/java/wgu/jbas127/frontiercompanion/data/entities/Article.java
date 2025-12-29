@@ -26,10 +26,9 @@ public class Article {
     @ColumnInfo(name = "is_active")
     private boolean isActive;
 
-    public Article(long id, long exhibitId, String title,
+    public Article(long exhibitId, String title,
                    String thumbnailPath, String contentUrl, int displayOrder,
                    boolean isActive) {
-        this.id = id;
         this.exhibitId = exhibitId;
         this.title = title;
         this.thumbnailPath = thumbnailPath;

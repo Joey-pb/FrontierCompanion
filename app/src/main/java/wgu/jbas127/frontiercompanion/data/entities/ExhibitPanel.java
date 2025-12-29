@@ -24,9 +24,8 @@ public class ExhibitPanel {
     @ColumnInfo(name = "image_res_name")
     private String imageResName;
 
-    public ExhibitPanel(long id, long exhibitId, int panelOrder,
+    public ExhibitPanel(long exhibitId, int panelOrder,
                          String content, String contentPosition, String imageResName) {
-        this.id = id;
         this.exhibitId = exhibitId;
         this.panelOrder = panelOrder;
         this.content = content;
