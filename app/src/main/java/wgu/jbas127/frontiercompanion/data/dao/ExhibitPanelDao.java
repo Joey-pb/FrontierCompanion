@@ -23,6 +23,9 @@ public interface ExhibitPanelDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<ExhibitPanel> exhibitPanels);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(ExhibitPanel exhibitPanel);
+
     // Search
     @Query("SELECT * FROM exhibit_panel WHERE content LIKE '%' || :query || '%'")
     List<ExhibitPanel> searchExhibitPanels(String query);
