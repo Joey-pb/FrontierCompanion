@@ -15,6 +15,7 @@ import wgu.jbas127.frontiercompanion.data.database.AppDatabase;
 import wgu.jbas127.frontiercompanion.data.entities.Article;
 import wgu.jbas127.frontiercompanion.data.entities.Exhibit;
 import wgu.jbas127.frontiercompanion.data.entities.ExhibitPanel;
+import wgu.jbas127.frontiercompanion.data.entities.ExhibitWithContent;
 import wgu.jbas127.frontiercompanion.data.models.SearchResult;
 
 public class ExhibitRepository {
@@ -54,17 +55,27 @@ public class ExhibitRepository {
         return exhibitDao.getExhibitByIdSync(id);
     }
 
-    public long insert(Exhibit exhibit) {
+    public LiveData<ExhibitWithContent> getExhibitWithContent(long id) { return exhibitDao.getExhibitWithContent(id); }
+
+    public long insertExhibit(Exhibit exhibit) {
        return exhibitDao.insert(exhibit);
     }
 
-    public void insertAll(List<Exhibit> exhibits) {
+    public void insertAllExhibits(List<Exhibit> exhibits) {
         exhibitDao.insertAll(exhibits);
     }
 
     // Exhibit panels
     public LiveData<List<ExhibitPanel>> getPanelsForExhibit(long exhibitId) {
         return panelDao.getPanelsForExhibit(exhibitId);
+    }
+
+    public void insertExhibitPanel(ExhibitPanel exhibitPanel) {
+        panelDao.insert(exhibitPanel);
+    }
+
+    public void insertAllExhibitPanels(List<ExhibitPanel> exhibitPanels) {
+        panelDao.insertAll(exhibitPanels);
     }
 
     // Articles (filtered by isActive)
@@ -78,6 +89,9 @@ public class ExhibitRepository {
     }
 
     // Article management
+    public void insertArticle(Article article) {
+        articleDao.insert(article);
+    }
     public void activateArticle(long articleId) {
         new Thread(() -> {
             articleDao.activateArticle(articleId);
