@@ -15,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.util.List;
 
 import wgu.jbas127.frontiercompanion.data.dao.ArticleDao;
@@ -47,8 +46,8 @@ public class ExhibitDaoTests {
                 .build();
 
         exhibitDao = db.exhibitDao();
-        panelDao = db.ExhibitPanelDao();
-        articleDao = db.ArticleDao();
+        panelDao = db.exhibitPanelDao();
+        articleDao = db.articleDao();
 
         populateDbForTesting();
     }
