@@ -2,9 +2,14 @@ package wgu.jbas127.frontiercompanion.data.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "article")
+@Entity(tableName = "article",
+        foreignKeys = @ForeignKey(entity = Exhibit.class,
+        parentColumns = "id",
+        childColumns = "exhibit_id",
+        onDelete = ForeignKey.NO_ACTION))
 public class Article {
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -12,8 +17,6 @@ public class Article {
     private long exhibitId;
     @ColumnInfo(name = "title")
     private String title;
-    @ColumnInfo(name = "description")
-    private String description;
     @ColumnInfo(name = "thumbnail_path")
     private String thumbnailPath;
     @ColumnInfo(name = "content_url")
@@ -23,11 +26,12 @@ public class Article {
     @ColumnInfo(name = "is_active")
     private boolean isActive;
 
-    public Article(long id, long exhibitId, String title, String description, String thumbnailPath, String contentUrl, int displayOrder, boolean isActive) {
+    public Article(long id, long exhibitId, String title,
+                   String thumbnailPath, String contentUrl, int displayOrder,
+                   boolean isActive) {
         this.id = id;
         this.exhibitId = exhibitId;
         this.title = title;
-        this.description = description;
         this.thumbnailPath = thumbnailPath;
         this.contentUrl = contentUrl;
         this.displayOrder = displayOrder;
@@ -56,14 +60,6 @@ public class Article {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getThumbnailPath() {
