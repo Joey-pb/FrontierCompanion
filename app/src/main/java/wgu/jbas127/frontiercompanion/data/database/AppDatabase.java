@@ -21,8 +21,8 @@ public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
 
     public abstract ExhibitDao exhibitDao();
-    public abstract ExhibitPanelDao ExhibitPanelDao();
-    public abstract ArticleDao ArticleDao();
+    public abstract ExhibitPanelDao exhibitPanelDao();
+    public abstract ArticleDao articleDao();
 
     public static synchronized AppDatabase getInstance(Context context){
         if (instance == null) {
