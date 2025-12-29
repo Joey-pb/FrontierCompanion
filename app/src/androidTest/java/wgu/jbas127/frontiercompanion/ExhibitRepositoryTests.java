@@ -44,8 +44,8 @@ public class ExhibitRepositoryTests {
 
         repository = new ExhibitRepository(
                 db.exhibitDao(),
-                db.ExhibitPanelDao(),
-                db.ArticleDao()
+                db.exhibitPanelDao(),
+                db.articleDao()
         );
 
         populateDbForTesting();
