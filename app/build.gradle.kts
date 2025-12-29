@@ -53,6 +53,10 @@ dependencies {
     // Mockito
     testImplementation(libs.mockito)
 
+    // Core testing
+    androidTestImplementation(libs.core.testing)
+    testImplementation(libs.core.testing)
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
