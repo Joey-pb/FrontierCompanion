@@ -44,9 +44,8 @@ public interface ArticleDao {
     void deleteAll();
 
     // Search active articles
-    @Query("SELECT * FROM article WHERE is_active = 1 AND (" +
-            "title LIKE '%' || :query || '%' OR " +
-            "description LIKE '%' || :query || '%')")
+    @Query("SELECT * FROM article WHERE is_active = 1 AND " +
+            "title LIKE '%' || :query || '%'")
     List<Article> searchArticles(String query);
 
     // Soft delete - mark as inactive
