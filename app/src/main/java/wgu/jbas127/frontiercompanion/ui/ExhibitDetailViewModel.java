@@ -6,11 +6,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import java.util.List;
-
-import wgu.jbas127.frontiercompanion.data.entities.Article;
-import wgu.jbas127.frontiercompanion.data.entities.Exhibit;
-import wgu.jbas127.frontiercompanion.data.entities.ExhibitPanel;
 import wgu.jbas127.frontiercompanion.data.entities.ExhibitWithContent;
 import wgu.jbas127.frontiercompanion.data.repository.ExhibitRepository;
 
