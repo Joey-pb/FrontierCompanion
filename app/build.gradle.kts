@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -40,11 +41,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
     // Room DB
     implementation(libs.androidx.room.runtime)
+    implementation(libs.play.services.maps)
     annotationProcessor(libs.androidx.room.compiler)
 
     // GSON
@@ -56,6 +63,13 @@ dependencies {
     // Core testing
     androidTestImplementation(libs.core.testing)
     testImplementation(libs.core.testing)
+
+    androidTestImplementation(libs.core.ktx)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+
+    // Espresso
+    androidTestImplementation(libs.espresso.contrib)
 
     implementation(libs.appcompat)
     implementation(libs.material)
