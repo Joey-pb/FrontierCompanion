@@ -52,6 +52,8 @@ dependencies {
     // Room DB
     implementation(libs.androidx.room.runtime)
     implementation(libs.play.services.maps)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
     annotationProcessor(libs.androidx.room.compiler)
 
     // GSON
