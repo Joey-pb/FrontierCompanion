@@ -21,6 +21,13 @@ public class SearchResult {
         this.category = category;
     }
 
+    public SearchResult(String type, long exhibitId, String name, String category) {
+        this.type = type;
+        this.exhibitId = exhibitId;
+        this.name = name;
+        this.category = category;
+    }
+
     public String getType() {
         return type;
     }
