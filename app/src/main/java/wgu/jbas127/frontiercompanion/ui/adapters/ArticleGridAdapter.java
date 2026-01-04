@@ -1,6 +1,5 @@
-package wgu.jbas127.frontiercompanion.ui;
+package wgu.jbas127.frontiercompanion.ui.adapters;
 
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 

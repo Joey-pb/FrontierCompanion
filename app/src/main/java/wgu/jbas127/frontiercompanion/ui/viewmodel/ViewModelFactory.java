@@ -1,4 +1,4 @@
-package wgu.jbas127.frontiercompanion.ui;
+package wgu.jbas127.frontiercompanion.ui.viewmodel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

@@ -1,4 +1,4 @@
-package wgu.jbas127.frontiercompanion.ui;
+package wgu.jbas127.frontiercompanion.ui.adapters;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -16,6 +16,7 @@ import wgu.jbas127.frontiercompanion.data.entities.Article;
 import wgu.jbas127.frontiercompanion.databinding.ItemActionPanelBinding;
 import wgu.jbas127.frontiercompanion.databinding.ItemExhibitPanelBinding;
 import wgu.jbas127.frontiercompanion.databinding.ItemTitlePanelBinding;
+import wgu.jbas127.frontiercompanion.ui.models.DisplayableItem;
 
 public class PanelAdapter extends ListAdapter<DisplayableItem, RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_TITLE = 1;
