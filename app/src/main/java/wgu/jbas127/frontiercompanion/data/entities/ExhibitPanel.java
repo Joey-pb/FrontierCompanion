@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 @Entity(tableName = "exhibit_panel",
         foreignKeys = @ForeignKey(entity = Exhibit.class,
         parentColumns = "id",
@@ -79,5 +81,17 @@ public class ExhibitPanel {
 
     public void setImageResName(String imageResName) {
         this.imageResName = imageResName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ExhibitPanel that = (ExhibitPanel) o;
+        return id == that.id && exhibitId == that.exhibitId && panelOrder == that.panelOrder && Objects.equals(content, that.content) && Objects.equals(contentPosition, that.contentPosition) && Objects.equals(imageResName, that.imageResName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, exhibitId, panelOrder, content, contentPosition, imageResName);
     }
 }

@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 @Entity(tableName = "article",
         foreignKeys = @ForeignKey(entity = Exhibit.class,
         parentColumns = "id",
@@ -91,5 +93,17 @@ public class Article {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Article)) return false;
+        Article article = (Article) o;
+        return id == article.id && exhibitId == article.exhibitId && displayOrder == article.displayOrder && isActive == article.isActive && Objects.equals(title, article.title) && Objects.equals(thumbnailPath, article.thumbnailPath) && Objects.equals(contentUrl, article.contentUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, exhibitId, title, thumbnailPath, contentUrl, displayOrder, isActive);
     }
 }

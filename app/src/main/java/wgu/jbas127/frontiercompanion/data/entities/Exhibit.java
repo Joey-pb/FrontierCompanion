@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 @Entity(tableName = "exhibit")
 public class Exhibit {
     @PrimaryKey(autoGenerate = true)
@@ -98,6 +100,18 @@ public class Exhibit {
 
     public String getImageResName() {
         return imageResName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Exhibit)) return false;
+        Exhibit exhibit = (Exhibit) o;
+        return id == exhibit.id && Double.compare(latitude, exhibit.latitude) == 0 && Double.compare(longitude, exhibit.longitude) == 0 && Objects.equals(name, exhibit.name) && Objects.equals(description, exhibit.description) && Objects.equals(era, exhibit.era) && Objects.equals(location, exhibit.location) && Objects.equals(imageResName, exhibit.imageResName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, latitude, longitude, description, era, location, imageResName);
     }
 }
 
