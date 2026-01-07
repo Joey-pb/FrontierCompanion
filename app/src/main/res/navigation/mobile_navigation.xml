@@ -15,7 +15,24 @@
         android:id="@+id/navigation_map"
         android:name="wgu.jbas127.frontiercompanion.ui.fragments.MapsFragment"
         android:label="@string/title_explore"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps" >
+
+    <action
+        android:id="@+id/action_mapsFragment_to_exhibitDetailsFragment"
+        app:destination="@id/exhibitDetailsFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/exhibitDetailsFragment"
+        android:name="wgu.jbas127.frontiercompanion.ui.fragments.ExhibitDetailsFragment"
+        android:label="fragment_exhibit_details"
+        tools:layout="@layout/fragment_exhibit_details" >
+
+        <argument
+            android:name="exhibitId"
+            app:argType="long" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_search"
