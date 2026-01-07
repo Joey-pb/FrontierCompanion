@@ -18,6 +18,7 @@ googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 playServicesMaps = "18.1.0"
 navigationFragment = "2.9.6"
 navigationUi = "2.9.6"
+navigationSafeArgs = "2.9.6"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -43,4 +44,5 @@ androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 google-android-libraries-mapsplatform-secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "googleAndroidLibrariesMapsplatformSecretsGradlePlugin" }
+androidx-navigation-safeargs = { id = "androidx.navigation.safeargs", version.ref = "navigationSafeArgs"}
 
