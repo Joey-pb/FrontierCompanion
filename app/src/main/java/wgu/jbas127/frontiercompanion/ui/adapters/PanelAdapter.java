@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import wgu.jbas127.frontiercompanion.R;
 import wgu.jbas127.frontiercompanion.data.entities.Article;
+import wgu.jbas127.frontiercompanion.data.entities.ExhibitPanel;
 import wgu.jbas127.frontiercompanion.databinding.ItemActionPanelBinding;
 import wgu.jbas127.frontiercompanion.databinding.ItemExhibitPanelBinding;
 import wgu.jbas127.frontiercompanion.databinding.ItemTitlePanelBinding;
@@ -136,8 +137,8 @@ public class PanelAdapter extends ListAdapter<DisplayableItem, RecyclerView.View
         }
 
         void bind(DisplayableItem.PanelItem item) {
-            binding.setPanel(item.panel);
-            binding.executePendingBindings();
+           binding.setPanel(item.panel);
+           binding.executePendingBindings();
         }
     }
 
@@ -206,6 +207,16 @@ public class PanelAdapter extends ListAdapter<DisplayableItem, RecyclerView.View
 
         @Override
         public boolean areContentsTheSame(@NonNull DisplayableItem oldItem, @NonNull DisplayableItem newItem) {
+            if (oldItem instanceof DisplayableItem.TitleItem && newItem instanceof DisplayableItem.TitleItem) {
+                return ((DisplayableItem.TitleItem) oldItem).exhibit.equals(((DisplayableItem.TitleItem) newItem).exhibit);
+            }
+            if (oldItem instanceof DisplayableItem.PanelItem && newItem instanceof DisplayableItem.PanelItem) {
+                return ((DisplayableItem.PanelItem) oldItem).panel.equals(((DisplayableItem.PanelItem) newItem).panel);
+            }
+            if (oldItem instanceof DisplayableItem.ActionItem && newItem instanceof DisplayableItem.ActionItem) {
+                // Compare the list of articles to see if they've changed.
+                return ((DisplayableItem.ActionItem) oldItem).articles.equals(((DisplayableItem.ActionItem) newItem).articles);
+            }
             return false;
         }
     };
