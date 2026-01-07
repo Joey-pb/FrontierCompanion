@@ -46,52 +46,6 @@ public class MapsFragment extends Fragment {
 
     private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
     private BottomSheetDetailsBinding sheetBinding;
-//    private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera.
-     * In this case, we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to
-     * install it inside the SupportMapFragment. This method will only be triggered once the
-     * user has installed Google Play services and returned to the app.
-     */
-//        @Override
-//        public void onMapReady(GoogleMap googleMap) {
-//            ExecutorService executor = Executors.newSingleThreadExecutor();
-//            Handler handler = new Handler(Looper.getMainLooper());
-//
-//            executor.execute(() -> {
-//                List<Exhibit> exhibitList = repository.getAllExhibitsSync();
-//
-//                handler.post(() -> {
-//                    if (exhibitList == null || exhibitList.isEmpty()) {
-//                        LatLng visitorCenter = new LatLng(38.124745, -79.050276);
-//                        googleMap.addMarker(new MarkerOptions().position(visitorCenter).title("No Exhibits Found"));
-//                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(visitorCenter));
-//                        return;
-//                    }
-//
-//                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//                    for (Exhibit exhibit : exhibitList) {
-//                        LatLng exhibitLocation = new LatLng(exhibit.getLatitude(), exhibit.getLongitude());
-//
-//                        googleMap.addMarker(new MarkerOptions()
-//                                .position(exhibitLocation)
-//                                .title(exhibit.getName()));
-//
-//                        builder.include(exhibitLocation);
-//                    }
-//
-//                    LatLngBounds bounds = builder.build();
-//                    int padding = 150;
-//                    googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-//                    googleMap.setLatLngBoundsForCameraTarget(bounds);
-//                });
-//            });
-//        }
-//    };
     
     @Nullable
     @Override
@@ -203,7 +157,7 @@ public class MapsFragment extends Fragment {
             int resId = getContext().getResources().getIdentifier(
                     exhibit.getImageResName(),
                     "drawable",
-                    getContext().getOpPackageName()
+                    getContext().getPackageName()
             );
 
             sheetBinding.exhibitImage.setImageResource(resId);
@@ -212,7 +166,10 @@ public class MapsFragment extends Fragment {
 
         sheetBinding.detailsButton.setOnClickListener(v -> {
             // TODO: Navigate to Exhibit Details
-            Toast.makeText(super.getContext(), "Details button clicked", Toast.LENGTH_SHORT).show();
+            MapsFragmentDirections.ActionMapsFragmentToExhibitDetailsFragment action =
+                    MapsFragmentDirections.actionMapsFragmentToExhibitDetailsFragment(exhibit.getId());
+
+            NavHostFragment.findNavController(MapsFragment.this).navigate(action);
         });
 
         sheetBinding.routeButton.setOnClickListener(v -> {
