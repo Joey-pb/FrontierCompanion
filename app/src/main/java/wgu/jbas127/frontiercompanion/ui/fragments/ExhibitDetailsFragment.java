@@ -14,16 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import wgu.jbas127.frontiercompanion.ExhibitDetailActivity;
 import wgu.jbas127.frontiercompanion.FrontierCompanionApplication;
 import wgu.jbas127.frontiercompanion.R;
 import wgu.jbas127.frontiercompanion.data.entities.Article;
-import wgu.jbas127.frontiercompanion.data.entities.Exhibit;
 import wgu.jbas127.frontiercompanion.data.entities.ExhibitPanel;
 import wgu.jbas127.frontiercompanion.data.repository.ExhibitRepository;
 import wgu.jbas127.frontiercompanion.ui.adapters.PanelAdapter;
@@ -54,7 +51,6 @@ public class ExhibitDetailsFragment extends Fragment implements PanelAdapter.OnA
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_exhibit_details, container, false);
     }
 
@@ -112,7 +108,6 @@ public class ExhibitDetailsFragment extends Fragment implements PanelAdapter.OnA
             }
         });
     }
-
 
     @Override
     public void onShowOnMapClicked(long exhibitId) {
