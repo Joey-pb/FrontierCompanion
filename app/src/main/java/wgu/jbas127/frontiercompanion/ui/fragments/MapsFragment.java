@@ -133,6 +133,7 @@ public class MapsFragment extends Fragment {
         if (mMap != null) {
             try {
                 mMap.setMyLocationEnabled(true);
+                mMap.setPadding(0, 50, 0, 0);
             } catch (SecurityException e) {
                 e.printStackTrace();
                 Log.e("Location Error", "Unable to set MyLocation" + e.getMessage());
@@ -173,7 +174,6 @@ public class MapsFragment extends Fragment {
                     LatLngBounds bounds = builder.build();
                     int padding = 150;
                     mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-                    mMap.setLatLngBoundsForCameraTarget(bounds);
 
                     mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding), new GoogleMap.CancelableCallback() {
 
