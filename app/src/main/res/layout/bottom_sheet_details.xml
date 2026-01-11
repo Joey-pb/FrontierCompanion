@@ -11,14 +11,6 @@
     app:behavior_hideable="true"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/exhibit_image"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/RoundedCornersImageView"
-        tools:src="@tools:sample/backgrounds/scenic" />
-
     <TextView
         android:id="@+id/exhibit_title"
         android:layout_width="wrap_content"
@@ -32,11 +24,19 @@
         android:id="@+id/exhibit_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
         android:maxLines="3"
         android:ellipsize="end"
         android:textAppearance="?attr/textAppearanceBody2"
         tools:text="A sprawling exhibit featuring lions, giraffes, zebras, and elephants in a naturalistic habitat. Get a glimpse of the majestic wildlife of Africa." />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/exhibit_image"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/RoundedCornersImageView"
+        tools:src="@tools:sample/backgrounds/scenic" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,5 +61,7 @@
             android:layout_weight="1"
             android:text="@string/view_exhibit" />
     </LinearLayout>
+
+
 
 </LinearLayout>
