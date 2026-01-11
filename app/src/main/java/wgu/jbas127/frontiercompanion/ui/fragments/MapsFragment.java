@@ -1,15 +1,20 @@
 package wgu.jbas127.frontiercompanion.ui.fragments;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +29,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior;
 import com.google.android.material.behavior.HideViewOnScrollBehavior;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.search.SearchView;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -46,7 +49,16 @@ public class MapsFragment extends Fragment {
 
     private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
     private BottomSheetDetailsBinding sheetBinding;
-    
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    enableMyLocation();
+            } else {
+                    Toast.makeText(getContext(), "Location permission denied.", Toast.LENGTH_LONG).show();
+                }
+            });
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -103,10 +115,30 @@ public class MapsFragment extends Fragment {
                     bottomNavBehavior.slideIn(bottomNavigationView);
                 }
             });
-            
+
+            checkLocationPermissionAndEnableLocation();
             loadSitesOnMap();
         }
     };
+
+    private void checkLocationPermissionAndEnableLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            enableMyLocation();
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+    }
+
+    private void enableMyLocation() {
+        if (mMap != null) {
+            try {
+                mMap.setMyLocationEnabled(true);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                Log.e("Location Error", "Unable to set MyLocation" + e.getMessage());
+            }
+        }
+    }
 
     private void loadSitesOnMap() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -142,6 +174,21 @@ public class MapsFragment extends Fragment {
                     int padding = 150;
                     mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
                     mMap.setLatLngBoundsForCameraTarget(bounds);
+
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding), new GoogleMap.CancelableCallback() {
+
+                        @Override
+                        public void onCancel() {
+                            mMap.setLatLngBoundsForCameraTarget(bounds);
+                            mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            mMap.setLatLngBoundsForCameraTarget(bounds);
+                            mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
+                        }
+                    });
                 });
             });
     }
@@ -163,13 +210,14 @@ public class MapsFragment extends Fragment {
             sheetBinding.exhibitImage.setImageResource(resId);
         }
 
-
         sheetBinding.detailsButton.setOnClickListener(v -> {
-            // TODO: Navigate to Exhibit Details
             MapsFragmentDirections.ActionMapsFragmentToExhibitDetailsFragment action =
                     MapsFragmentDirections.actionMapsFragmentToExhibitDetailsFragment(exhibit.getId());
 
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             NavHostFragment.findNavController(MapsFragment.this).navigate(action);
+
+
         });
 
         sheetBinding.routeButton.setOnClickListener(v -> {
@@ -177,4 +225,5 @@ public class MapsFragment extends Fragment {
             Toast.makeText(super.getContext(), "Create route button clicked", Toast.LENGTH_SHORT).show();
         });
     }
+
 }
