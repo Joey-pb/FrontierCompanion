@@ -2,12 +2,16 @@ package wgu.jbas127.frontiercompanionbackend.entitiy;
 
 import com.pgvector.PGvector;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "articles")
 public class Article {
