@@ -1,13 +1,19 @@
 package wgu.jbas127.frontiercompanionbackend.dto;
 
-public record ArticleDTO (
-    Long id,
-    String title,
-    String description,
-    String url,
-    String thumbnailUrl,
-    String author,
-    String source,
-    String publishedDate,
-    Double similarityScore
-){}
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class ArticleDTO {
+    private Long id;
+    private String title;
+    private String description;
+    private String url;
+    private String thumbnailUrl;
+    private String author;
+    private String source;
+    private String publishedDate;
+    private Double similarityScore;
+
+}
