@@ -1,5 +1,6 @@
 package wgu.jbas127.frontiercompanionbackend.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -8,7 +9,7 @@ import wgu.jbas127.frontiercompanionbackend.entitiy.Article;
 import java.util.List;
 
 @Repository
-public interface ArticleRepository {
+public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     // Semantic search using vector similarity
     @Query(value = """
@@ -43,7 +44,7 @@ public interface ArticleRepository {
     // Get articles by exhibit ID
     @Query("SELECT a FROM Article a JOIN a.exhibitMappings em " +
             "WHERE em.exhibitId = :exhibitId ORDER BY em.displayOrder ASC")
-    List<Article> findByExhibitId(@Param("exhibitId") String exhibitId);
+    List<Article> findByExhibitId(@Param("exhibitId") Long exhibitId);
 
     // Get all articles ordered by date
     @Query("SELECT a FROM Article a ORDER BY a.publishedDate DESC NULLS LAST")
