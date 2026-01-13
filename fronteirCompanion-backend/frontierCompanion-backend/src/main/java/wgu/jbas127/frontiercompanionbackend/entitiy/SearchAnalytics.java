@@ -1,9 +1,13 @@
 package wgu.jbas127.frontiercompanionbackend.entitiy;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "search_analytics")
 public class SearchAnalytics {
@@ -13,6 +17,9 @@ public class SearchAnalytics {
 
     @Column(name = "query_text", nullable = false, columnDefinition = "TEXT")
     private String queryText;
+
+    @Column(name = "result_count")
+    private int resultCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clicked_article_id")
@@ -24,5 +31,7 @@ public class SearchAnalytics {
     @PrePersist
     protected void onCreate() {
         searchTimestamp = LocalDateTime.now();
+
+
     }
 }
