@@ -51,6 +51,13 @@ android {
 }
 
 dependencies {
+    // OkHTTP
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.gson)
+
+    // Retrofit
+    implementation(libs.retrofit)
+
     // Room DB
     implementation(libs.androidx.room.runtime)
     implementation(libs.play.services.maps)
