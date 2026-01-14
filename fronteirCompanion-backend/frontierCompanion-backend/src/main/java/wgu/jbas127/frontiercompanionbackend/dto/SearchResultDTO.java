@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 public class SearchResultDTO {
     private List<ArticleDTO> articles;
+    private List<NarrativeDTO> narratives;
     private Integer totalResults;
 
 }
