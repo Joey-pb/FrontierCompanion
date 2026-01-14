@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "66533874850",
+    "project_id": "frontier-companion-b621a",
+    "storage_bucket": "frontier-companion-b621a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66533874850:android:bdde76ed46111f1070cbfb",
+        "android_client_info": {
+          "package_name": "wgu.jbas127.frontiercompanion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6ynvWOQmX-iU9TBZCSCeA1A3auRs11e0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
