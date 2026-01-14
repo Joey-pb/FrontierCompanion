@@ -4,6 +4,8 @@ import com.pgvector.PGvector;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
+import wgu.jbas127.frontiercompanionbackend.config.VectorType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,6 +50,7 @@ public class Article {
     private LocalDateTime updatedAt;
 
     @Column(columnDefinition = "vector(1536)")
+    @Type(VectorType.class)
     private PGvector embedding;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
