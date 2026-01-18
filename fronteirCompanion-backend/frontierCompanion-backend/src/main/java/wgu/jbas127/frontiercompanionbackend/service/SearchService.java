@@ -4,10 +4,7 @@ import com.pgvector.PGvector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wgu.jbas127.frontiercompanionbackend.dto.ArticleDTO;
-import wgu.jbas127.frontiercompanionbackend.dto.NarrativeDTO;
-import wgu.jbas127.frontiercompanionbackend.dto.SearchRequest;
-import wgu.jbas127.frontiercompanionbackend.dto.SearchResultDTO;
+import wgu.jbas127.frontiercompanionbackend.dto.*;
 import wgu.jbas127.frontiercompanionbackend.entitiy.Article;
 import wgu.jbas127.frontiercompanionbackend.entitiy.Narrative;
 import wgu.jbas127.frontiercompanionbackend.entitiy.SearchAnalytics;
@@ -18,6 +15,10 @@ import wgu.jbas127.frontiercompanionbackend.repository.SearchAnalyticsRepository
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service for performing semantic searches across articles and narratives.
+ * It also handles search analytics tracking and retrieval.
+ */
 @Service
 @RequiredArgsConstructor
 public class SearchService {
@@ -27,6 +28,14 @@ public class SearchService {
     private final SearchAnalyticsRepository analyticsRepository;
     private final EmbeddingService embeddingService;
 
+    /**
+     * Executes a semantic search based on the provided request.
+     * Generates an embedding for the query text and retrieves similar articles and narratives.
+     * Search results are logged in the analytics repository.
+     *
+     * @param request The {@link SearchRequest} containing the query, threshold, and limit.
+     * @return A {@link SearchResultDTO} containing the matching articles and narratives.
+     */
     @Transactional
     public SearchResultDTO search(SearchRequest request) {
         // Track search analytics
@@ -69,70 +78,43 @@ public class SearchService {
     }
 
     /**
-     * Search only articles
+     * Retrieves a list of the most frequent search queries.
+     *
+     * @param limit The maximum number of popular queries to return.
+     * @return A list of strings representing the most popular queries.
      */
-    @Transactional
-    public List<ArticleDTO> searchArticles(SearchRequest request) {
-        float[] queryEmbedding = embeddingService.generateEmbedding(request.getQuery());
-        String embeddingStr = new PGvector(queryEmbedding).toString();
-
-        List<Article> articles = articleRepository.searchBySimilarity(
-                embeddingStr,
-                request.getThreshold(),
-                request.getLimit()
-        );
-
-        return articles.stream()
-                .map(this::convertArticleToDTO)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Search only narratives
-     */
-    @Transactional
-    public List<NarrativeDTO> searchNarratives(SearchRequest request) {
-        float[] queryEmbedding = embeddingService.generateEmbedding(request.getQuery());
-        String embeddingStr = new PGvector(queryEmbedding).toString();
-
-        List<Narrative> narratives = narrativeRepository.searchBySimilarity(
-                embeddingStr,
-                request.getThreshold(),
-                request.getLimit()
-        );
-
-        return narratives.stream()
-                .map(this::convertNarrativeToDTO)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Search narratives for a specific exhibit
-     */
-    @Transactional(readOnly = true)
-    public List<NarrativeDTO> searchNarrativesByExhibit(String query, Long exhibitId, int limit) {
-        float[] queryEmbedding = embeddingService.generateEmbedding(query);
-        String embeddingStr = new PGvector(queryEmbedding).toString();
-
-        List<Narrative> narratives = narrativeRepository.searchByExhibitAndSimilarity(
-                exhibitId,
-                embeddingStr,
-                0.5,
-                limit
-        );
-
-        return narratives.stream()
-                .map(this::convertNarrativeToDTO)
-                .collect(Collectors.toList());
-    }
-
     public List<String> getPopularQueries(int limit) {
         return analyticsRepository.findPopularQueries().stream()
                 .limit(limit)
                 .map(row -> (String) row[0])
                 .collect(Collectors.toList());
+
     }
 
+    /**
+     * Retrieves the most recent search queries with their result counts and timestamps.
+     *
+     * @param limit The maximum number of recent queries to return.
+     * @return A list of {@link MostRecentQueryDTO} objects.
+     */
+    public List<MostRecentQueryDTO> getMostRecentQueries(int limit) {
+        return analyticsRepository.findRecentQueries().stream()
+                .limit(limit)
+                .map(s -> new MostRecentQueryDTO(
+                        s.getQueryText(),
+                        s.getResultCount(),
+                        s.getClickedArticle() != null ? s.getClickedArticle().getId() : null,
+                        s.getSearchTimestamp()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Converts an {@link Article} entity to an {@link ArticleDTO}.
+     *
+     * @param article The article entity to convert.
+     * @return The resulting DTO.
+     */
     private ArticleDTO convertArticleToDTO(Article article) {
         ArticleDTO dto = new ArticleDTO();
 
@@ -149,6 +131,12 @@ public class SearchService {
         return dto;
     }
 
+    /**
+     * Converts a {@link Narrative} entity to a {@link NarrativeDTO}.
+     *
+     * @param narrative The narrative entity to convert.
+     * @return The resulting DTO.
+     */
     private NarrativeDTO convertNarrativeToDTO(Narrative narrative) {
         NarrativeDTO dto = new NarrativeDTO();
 

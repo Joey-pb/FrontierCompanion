@@ -14,6 +14,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service for managing narrative documents, including processing, chunking,
+ * embedding generation, and soft deletion/restoration.
+ */
 @Service
 @RequiredArgsConstructor
 public class NarrativeService {
@@ -22,8 +26,14 @@ public class NarrativeService {
     private final EmbeddingService embeddingService;
 
     /**
-     * Process narrative document and store with embeddings
-     * Supports: TXT, MD, or any plain text format
+     * Processes a narrative document (TXT, MD, etc.) and stores it as multiple narrative chunks with embeddings.
+     * The document can be structured with markdown-style headers or processed as continuous text.
+     *
+     * @param file        The {@link MultipartFile} containing the narrative text.
+     * @param exhibitId   The ID of the exhibit associated with this narrative.
+     * @param sectionName An optional name for the narrative section.
+     * @return A list of the saved {@link Narrative} entities.
+     * @throws Exception If an error occurs during file reading or processing.
      */
     @Transactional
     public List<Narrative> processNarrativeDocument(MultipartFile file, Long exhibitId, String sectionName)
@@ -120,8 +130,10 @@ public class NarrativeService {
     }
 
     /**
-     * Parse structured document with markdown-style headers
-     * Looks for lines starting with ## or # as section headers
+     * Parses a structured document with markdown-style headers (e.g., lines starting with ## or #).
+     *
+     * @param text The full text of the document.
+     * @return A list of {@link NarrativeSection} objects.
      */
     private List<NarrativeSection> parseStructuredDocument(String text) {
         List<NarrativeSection> sections = new ArrayList<>();
@@ -131,7 +143,7 @@ public class NarrativeService {
         StringBuilder currentContent = new StringBuilder();
 
         for (String line : lines) {
-            // Check for headers - use trim() to handle leading/trailing spaces
+            // Check for headers
             if (line.trim().startsWith("## ") || line.trim().startsWith("# ")) {
                 // Save previous section if it has content
                 if (currentTitle != null && currentContent.length() > 0) {
@@ -162,8 +174,11 @@ public class NarrativeService {
     }
 
     /**
-     * Split text into chunks of approximately chunkSize characters
-     * Splits on sentence boundaries for better semantic coherence
+     * Splits text into chunks of approximately chunkSize characters, splitting on sentence boundaries.
+     *
+     * @param text      The text to chunk.
+     * @param chunkSize The target size for each chunk.
+     * @return A list of text chunks.
      */
     private List<String> chunkText(String text, int chunkSize) {
         List<String> chunks = new ArrayList<>();
@@ -183,7 +198,7 @@ public class NarrativeService {
                 continue;
             }
 
-            // If adding this sentence exceeds chunk size and we have content, save chunk
+            // If adding this sentence exceeds chunk size has content, save chunk
             if (currentChunk.length() + sentence.length() > chunkSize && currentChunk.length() > 0) {
                 String chunk = currentChunk.toString().trim();
                 if (!chunk.isEmpty()) {
@@ -206,7 +221,14 @@ public class NarrativeService {
     }
 
     /**
-     * Create a narrative entity with embedding
+     * Creates a {@link Narrative} entity, generates its embedding, and returns it.
+     *
+     * @param exhibitId   The ID of the exhibit.
+     * @param title       The title for the narrative chunk.
+     * @param content     The text content of the chunk.
+     * @param sectionName The name of the section.
+     * @param chunkIndex  The index of this chunk within the section/document.
+     * @return The created {@link Narrative} entity.
      */
     private Narrative createNarrative(Long exhibitId, String title, String content,
                                       String sectionName, int chunkIndex) {
@@ -232,7 +254,10 @@ public class NarrativeService {
     }
 
     /**
-     * Get all narratives for an exhibit
+     * Retrieves all narratives for a specific exhibit.
+     *
+     * @param exhibitId The ID of the exhibit.
+     * @return A list of {@link Narrative} entities associated with the exhibit.
      */
     @Transactional(readOnly = true)
     public List<Narrative> getNarrativesByExhibit(Long exhibitId) {
@@ -240,24 +265,47 @@ public class NarrativeService {
     }
 
     /**
-     * Delete a single narrative by ID
+     * Marks all active narratives for an exhibit as deleted.
+     *
+     * @param exhibitId The ID of the exhibit.
+     * @return A message indicating how many chunks were deleted.
+     * @throws RuntimeException If no active narratives are found for the exhibit.
      */
-    @Transactional
-    public void deleteNarrative(Long id) {
-        narrativeRepository.deleteById(id);
+    public String softDeleteByExhibitId(Long exhibitId) {
+        List<Narrative> narratives = narrativeRepository.findByExhibitIdAndDeletedFalse(exhibitId);
+
+        if (narratives.isEmpty()) {
+            throw new RuntimeException("No narratives found for exhibit " + exhibitId);
+        }
+
+        narratives.forEach(narrative -> narrative.setDeleted(true));
+        narrativeRepository.saveAll(narratives);
+
+        return narratives.size() + " narrative chunks deleted for exhibit " + exhibitId;
     }
 
     /**
-     * Delete all narratives for an exhibit
+     * Restores previously soft-deleted narratives for an exhibit.
+     *
+     * @param exhibitId The ID of the exhibit.
+     * @return A message indicating how many chunks were restored.
+     * @throws RuntimeException If no deleted narratives are found for the exhibit.
      */
-    @Transactional
-    public void deleteNarrativesByExhibit(Long exhibitId) {
-        List<Narrative> narratives = narrativeRepository.findByExhibitId(exhibitId);
-        narrativeRepository.deleteAll(narratives);
+    public String restoreByExhibitId(Long exhibitId) {
+        List<Narrative> narratives = narrativeRepository.findByExhibitIdAndDeletedTrue(exhibitId);
+
+        if (narratives.isEmpty()) {
+            throw new RuntimeException("No deleted narratives found for exhibit " + exhibitId);
+        }
+
+        narratives.forEach(narrative -> narrative.setDeleted(false));
+        narrativeRepository.saveAll(narratives);
+
+        return narratives.size() + " narrative chunks restored for exhibit " + exhibitId;
     }
 
     /**
-     * Helper class for structured document sections
+     * Private helper class for representing sections of a structured narrative document.
      */
     private static class NarrativeSection {
         private final String title;
