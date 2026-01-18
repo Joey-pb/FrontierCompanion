@@ -14,6 +14,4 @@ public class ArticleDTO {
     private String author;
     private String source;
     private String publishedDate;
-    private Double similarityScore;
-
 }
