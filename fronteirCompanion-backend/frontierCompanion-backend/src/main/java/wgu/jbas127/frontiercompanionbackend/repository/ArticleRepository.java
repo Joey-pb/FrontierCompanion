@@ -11,7 +11,15 @@ import java.util.List;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    // Semantic search using vector similarity
+    /**
+     * Performs semantic search for articles based on a query embedding.
+     * Returns articles with similarity scores above a specified threshold, ordered by similarity.
+     *
+     * @param queryEmbedding Embedding of the query text
+     * @param threshold Minimum similarity threshold
+     * @param limit Maximum number of results to return
+     * @return List of articles with similarity scores
+     */
     @Query(value = """
         SELECT a.*, 1 - (a.embedding <=> CAST(:queryEmbedding AS vector)) AS similarity
         FROM articles a
@@ -26,7 +34,13 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             @Param("limit") int limit
     );
 
-    // Find similar articles to a given article
+    /**
+     * Finds articles similar to a given article, ordered by similarity.
+     *
+     * @param articleId ID of the article to compare against
+     * @param limit Maximum number of results to return
+     * @return List of articles with similarity scores
+     */
     @Query(value = """
         SELECT a.*, 1 - (a.embedding <=> ref.embedding) AS similarity
         FROM articles a,
@@ -41,12 +55,22 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             @Param("limit") int limit
     );
 
-    // Get articles by exhibit ID
+    /**
+     * Retrieves articles associated with a specific exhibit, ordered by their display order.
+     *
+     * @param exhibitId ID of the exhibit
+     * @return List of articles associated with the exhibit, sorted by display order.
+     */
     @Query("SELECT a FROM Article a JOIN a.exhibitMappings em " +
             "WHERE em.exhibitId = :exhibitId ORDER BY em.displayOrder ASC")
     List<Article> findByExhibitId(@Param("exhibitId") Long exhibitId);
 
-    // Get all articles ordered by date
+    /**
+     * Retrieves all articles sorted by their published date in descending order.
+     * Articles with null published dates are sorted last.
+     *
+     * @return List of articles ordered from the most recently published to the least recently published.
+     */
     @Query("SELECT a FROM Article a ORDER BY a.publishedDate DESC NULLS LAST")
     List<Article> findAllOrderByPublishedDateDesc();
 }

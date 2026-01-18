@@ -11,43 +11,52 @@ import java.util.List;
 @Repository
 public interface NarrativeRepository extends JpaRepository<Narrative, Long> {
 
-    // Semantic search for narratives
+    /**
+     * Performs semantic search for narratives based on a query embedding.
+     * Returns narratives with similarity scores above a specified threshold, ordered by similarity.
+     *
+     * @param queryEmbedding Embedding of the query text
+     * @param threshold Minimum similarity threshold
+     * @param limit Maximum number of results to return
+     * @return List of narratives with similarity scores
+     */
     @Query(value = """
-        SELECT n.*, 1 - (n.embedding <=> CAST(:queryEmbedding AS vector)) AS similarity
-        FROM narratives n
-        WHERE n.embedding IS NOT NULL
-            AND 1 - (n.embedding <=> CAST(:queryEmbedding AS vector)) > :threshold
-        ORDER BY n.embedding <=> CAST(:queryEmbedding AS vector)
-        LIMIT :limit
-        """, nativeQuery = true)
+    SELECT n.*, 1 - (n.embedding <=> CAST(:queryEmbedding AS vector)) AS similarity
+    FROM narratives n
+    WHERE n.embedding IS NOT NULL
+        AND n.deleted = false
+        AND 1 - (n.embedding <=> CAST(:queryEmbedding AS vector)) > :threshold
+    ORDER BY n.embedding <=> CAST(:queryEmbedding AS vector)
+    LIMIT :limit
+    """, nativeQuery = true)
     List<Narrative> searchBySimilarity(
             @Param("queryEmbedding") String queryEmbedding,
             @Param("threshold") double threshold,
             @Param("limit") int limit
     );
 
-    // Search narratives for specific exhibit
-    @Query(value = """
-        SELECT n.*, 1 - (n.embedding <=> CAST(:queryEmbedding AS vector)) AS similarity
-        FROM narratives n
-        WHERE n.exhibit_id = :exhibitId
-            AND n.embedding IS NOT NULL
-            AND 1 - (n.embedding <=> CAST(:queryEmbedding AS vector)) > :threshold
-        ORDER BY n.embedding <=> CAST(:queryEmbedding AS vector)
-        LIMIT :limit
-        """, nativeQuery = true)
-    List<Narrative> searchByExhibitAndSimilarity(
-            @Param("exhibitId") Long exhibitId,
-            @Param("queryEmbedding") String queryEmbedding,
-            @Param("threshold") double threshold,
-            @Param("limit") int limit
-    );
-
-    // Get narratives for specific exhibit
+    /**
+     * Retrieves narratives associated with a specific exhibit, ordered by their chunk index.
+     *
+     * @param exhibitId ID of the exhibit
+     * @return List of narratives associated with the exhibit, sorted by chunk index.
+     */
     @Query("SELECT n FROM Narrative n WHERE n.exhibitId = :exhibitId ORDER BY n.chunkIndex ASC")
     List<Narrative> findByExhibitId(@Param("exhibitId") Long exhibitId);
 
-    // Get narratives by section
-    @Query("SELECT n FROM Narrative n WHERE n.sectionName = :sectionName")
-    List<Narrative> findBySectionName(@Param("sectionName") String sectionName);
+    /**
+     * Retrieves active narratives associated with a specific exhibit.
+     *
+     * @param exhibitId ID of the exhibit
+     * @return List of active narratives associated with the exhibit.
+     */
+    List<Narrative> findByExhibitIdAndDeletedFalse(Long exhibitId);
+
+    /**
+     * Retrieves deleted narratives associated with a specific exhibit.
+     *
+     * @param exhibitId ID of the exhibit
+     * @return List of deleted narratives associated with the exhibit.
+     */
+    List<Narrative> findByExhibitIdAndDeletedTrue(Long exhibitId);
 }

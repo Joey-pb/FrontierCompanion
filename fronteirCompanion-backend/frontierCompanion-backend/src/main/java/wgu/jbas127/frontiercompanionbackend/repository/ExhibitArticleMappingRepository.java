@@ -8,5 +8,11 @@ import java.util.List;
 
 @Repository
 public interface ExhibitArticleMappingRepository extends JpaRepository<ExhibitArticleMapping, Long> {
+
+    /**
+     * Find all mappings for a given exhibit
+     * @param exhibitId ID of the exhibit
+     * @return List of mappings ordered by display order
+     */
     List<ExhibitArticleMapping> findByExhibitIdOrderByDisplayOrderAsc(Long exhibitId);
 }
