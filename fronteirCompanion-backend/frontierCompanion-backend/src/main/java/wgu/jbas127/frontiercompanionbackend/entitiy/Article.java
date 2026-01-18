@@ -2,8 +2,7 @@ package wgu.jbas127.frontiercompanionbackend.entitiy;
 
 import com.pgvector.PGvector;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.Type;
 import wgu.jbas127.frontiercompanionbackend.config.VectorType;
 
@@ -12,8 +11,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name = "articles")
 public class Article {

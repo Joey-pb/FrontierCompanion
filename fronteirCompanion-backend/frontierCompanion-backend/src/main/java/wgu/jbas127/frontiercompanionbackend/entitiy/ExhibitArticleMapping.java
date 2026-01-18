@@ -1,9 +1,11 @@
 package wgu.jbas127.frontiercompanionbackend.entitiy;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "exhibit_article_mappings")
 public class ExhibitArticleMapping {

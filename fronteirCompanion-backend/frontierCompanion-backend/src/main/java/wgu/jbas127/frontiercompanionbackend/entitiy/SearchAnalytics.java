@@ -1,13 +1,11 @@
 package wgu.jbas127.frontiercompanionbackend.entitiy;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name = "search_analytics")
 public class SearchAnalytics {
@@ -31,7 +29,5 @@ public class SearchAnalytics {
     @PrePersist
     protected void onCreate() {
         searchTimestamp = LocalDateTime.now();
-
-
     }
 }

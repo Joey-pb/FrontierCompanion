@@ -2,17 +2,15 @@ package wgu.jbas127.frontiercompanionbackend.entitiy;
 
 import com.pgvector.PGvector;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.Type;
 import wgu.jbas127.frontiercompanionbackend.config.VectorType;
 
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "narratives")
-@Getter
-@Setter
 public class Narrative {
 
     @Id
@@ -37,6 +35,9 @@ public class Narrative {
     @Column(columnDefinition = "vector(1536)")
     @Type(VectorType.class)
     private PGvector embedding;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
