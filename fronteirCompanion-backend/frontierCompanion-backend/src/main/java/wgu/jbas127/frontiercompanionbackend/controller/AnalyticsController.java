@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping("api/reports")
 @RequiredArgsConstructor
 @Tag(name = "Search Analytics", description = "Report and Analytics APIs")
-public class ReportController {
+public class AnalyticsController {
 
     private final SearchService searchService;
     private final ReportService reportService;
