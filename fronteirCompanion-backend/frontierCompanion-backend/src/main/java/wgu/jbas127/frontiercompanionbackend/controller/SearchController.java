@@ -5,14 +5,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import wgu.jbas127.frontiercompanionbackend.dto.ArticleDTO;
-import wgu.jbas127.frontiercompanionbackend.dto.NarrativeDTO;
 import wgu.jbas127.frontiercompanionbackend.dto.SearchRequest;
 import wgu.jbas127.frontiercompanionbackend.dto.SearchResultDTO;
 import wgu.jbas127.frontiercompanionbackend.service.SearchService;
 
-import java.util.List;
-
+/**
+ * REST controller for semantic search operations and analytics.
+ * Provides endpoints for searching articles and narratives, and retrieving popular or recent queries.
+ */
 @RestController
 @RequestMapping("/api/search")
 @CrossOrigin(origins = "*")
@@ -22,45 +22,15 @@ public class SearchController {
 
     private final SearchService searchService;
 
-//    /**
-//     * Unified Search
-//     */
-//    @PostMapping
-//    @Operation(summary = "Unified search", description = "Search both articles and narratives")
-//    public ResponseEntity<SearchResultDTO> search(@RequestBody SearchRequest searchRequest) {
-//        return ResponseEntity.ok(searchService.search(searchRequest));
-//    }
-
     /**
-     * Search only Articles
+     * Performs a simple semantic search based on a query parameter.
+     * Results include both articles and narratives that exceed the similarity threshold.
+     *
+     * @param query     The search query text.
+     * @param limit     The maximum number of results to return (default is 20).
+     * @param threshold The similarity threshold for results (default is 0.3).
+     * @return A {@link ResponseEntity} containing a {@link SearchResultDTO} with matched items.
      */
-    @PostMapping("/articles")
-    @Operation(summary = "Search only articles")
-    public ResponseEntity<List<ArticleDTO>> searchArticles(@RequestBody SearchRequest searchRequest) {
-        return ResponseEntity.ok(searchService.searchArticles(searchRequest));
-    }
-
-    /**
-     * Search only Narratives
-     */
-    @PostMapping("/narratives")
-    @Operation(summary = "Search only narratives")
-    public ResponseEntity<List<NarrativeDTO>> searchNarratives(@RequestBody SearchRequest searchRequest) {
-        return ResponseEntity.ok(searchService.searchNarratives(searchRequest));
-    }
-
-    /**
-     * Search Narratives for specific exhibit
-     */
-    @PostMapping("/narratives/exhibit/{exhibitId}")
-    @Operation(summary = "Search narratives for specific exhibit")
-    public ResponseEntity<List<NarrativeDTO>> searchNarrativeExhibit(
-            @PathVariable Long exhibitId,
-            @RequestParam String query,
-            @RequestParam(defaultValue = "10") int limit) {
-        return ResponseEntity.ok(searchService.searchNarrativesByExhibit(query, exhibitId, limit));
-    }
-
     @GetMapping
     @Operation(summary = "Simple search with query parameter")
     public ResponseEntity<SearchResultDTO> searchSimple(
@@ -74,11 +44,5 @@ public class SearchController {
         request.setThreshold(threshold);
 
         return ResponseEntity.ok(searchService.search(request));
-    }
-
-    @GetMapping("/popular")
-    @Operation(summary = "Get popular search queries")
-    public ResponseEntity<List<String>> getPopularQueries(@RequestParam(defaultValue = "10") int limit) {
-        return ResponseEntity.ok(searchService.getPopularQueries(limit));
     }
 }
