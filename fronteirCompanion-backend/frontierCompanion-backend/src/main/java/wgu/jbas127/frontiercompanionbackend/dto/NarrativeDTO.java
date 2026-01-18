@@ -9,5 +9,4 @@ public class NarrativeDTO {
     private String title;
     private String content;
     private String sectionName;
-    private Double similarityScore;
 }
