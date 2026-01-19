@@ -1,8 +1,11 @@
 package wgu.jbas127.frontiercompanionbackend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,7 +27,12 @@ import java.util.List;
  * Current reports include: Most Recent Queries
  */
 @RestController
-@RequestMapping("api/reports")
+@RequestMapping("api/analytics")
+@Slf4j
+@SecurityRequirements({
+        @SecurityRequirement(name = "api-key"),
+        @SecurityRequirement(name = "basic-auth")
+})
 @RequiredArgsConstructor
 @Tag(name = "Search Analytics", description = "Report and Analytics APIs")
 public class AnalyticsController {
