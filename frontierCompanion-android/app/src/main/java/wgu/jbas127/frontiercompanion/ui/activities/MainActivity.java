@@ -8,6 +8,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import wgu.jbas127.frontiercompanion.R;
 import wgu.jbas127.frontiercompanion.databinding.ActivityMainBinding;
 
@@ -19,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
@@ -28,22 +31,19 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupWithNavController(binding.bottomNavView, navController);
 
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if(destination.getId() == R.id.navigation_home ||
-                    destination.getId() == R.id.navigation_search ||
-                    destination.getId() == R.id.navigation_map) {
-                binding.bottomNavView.setVisibility(View.VISIBLE);
-            } else if(destination.getId() == R.id.exhibitDetailsFragment) {
-                binding.bottomNavView.setVisibility(View.GONE);
-            } else {
-                binding.bottomNavView.setVisibility(View.GONE);
-            }
-        });
+        Set<Integer> topLevelDestinations = new HashSet<>();
+        topLevelDestinations.add(R.id.navigation_home);
+        topLevelDestinations.add(R.id.navigation_search);
+        topLevelDestinations.add(R.id.navigation_map);
 
-        binding.bottomNavView.setOnItemReselectedListener(item -> {
-            if (item.getItemId() == R.id.navigation_map) {
-                navController.popBackStack(R.id.navigation_map, false);
-            }
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            binding.bottomNavView.post(() -> {
+                if (topLevelDestinations.contains(destination.getId())) {
+                    binding.bottomNavView.setVisibility(View.VISIBLE);
+                } else {
+                    binding.bottomNavView.setVisibility(View.GONE);
+                }
+            });
         });
     }
 }
