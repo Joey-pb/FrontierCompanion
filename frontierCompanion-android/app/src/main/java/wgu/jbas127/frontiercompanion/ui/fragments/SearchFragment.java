@@ -7,26 +7,34 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import wgu.jbas127.frontiercompanion.R;
+import wgu.jbas127.frontiercompanion.data.models.NarrativeDTO;
+import wgu.jbas127.frontiercompanion.ui.adapters.SearchResultsAdapter;
 import wgu.jbas127.frontiercompanion.ui.viewmodel.SearchViewModel;
 
 public class SearchFragment extends Fragment {
-
-    private static final String TAG = "SearchFragmentTest"; // Tag for logging
-
     private SearchViewModel searchViewModel;
+    private SearchResultsAdapter searchAdapter;
 
-    // UI components for testing
+    // UI Components
+    private RecyclerView recyclerView;
     private SearchView searchView;
-    private Button testButton;
+    private ProgressBar loadingIndicator;
+    private TextView emptyStateText;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -35,6 +43,7 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
@@ -42,47 +51,89 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Initialize ViewModel and UI components
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+        initViews(view);
 
-        testButton = view.findViewById(R.id.test_search_button);
-        searchView = view.findViewById(R.id.search_view);
+        // Setup the RecyclerView and its adapter
+        setupRecyclerView();
 
-        testButton.setOnClickListener(v -> {
-            String query = "blacksmith"; // Hardcoded query for the test
-            Log.d(TAG, "Initiating test search for query: '" + query + "'");
-            Toast.makeText(getContext(), "Running test for: " + query, Toast.LENGTH_SHORT).show();
+        // Setup listeners for UI components
+        setupSearchListener();
 
-            searchViewModel.search(query);
-        });
-
+        // Observe LiveData from the ViewModel
         setupObservers();
     }
 
-    private void setupObservers() {
-        searchViewModel.getSearchResults().observe(getViewLifecycleOwner(), narratives -> {
-            if (narratives != null) {
-                Log.i(TAG, "SUCCESS: Search results received. Count: " + narratives.size());
-                if (!narratives.isEmpty()) {
-                    Log.d(TAG, "First result - Section: " + narratives.get(0).getSectionName());
-                    Log.d(TAG, "First result - Content: " + narratives.get(0).getContent());
+    private void initViews(View view) {
+        recyclerView = view.findViewById(R.id.search_results_recycler_view);
+        searchView = view.findViewById(R.id.search_view);
+        loadingIndicator = view.findViewById(R.id.loading_indicator);
+        emptyStateText = view.findViewById(R.id.empty_state_text);
+    }
+
+    private void setupRecyclerView() {
+        searchAdapter = new SearchResultsAdapter();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(searchAdapter);
+    }
+
+    private void setupSearchListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query != null && !query.trim().isEmpty()) {
+                    searchViewModel.search(query.trim());
+                    searchView.clearFocus(); // Hide keyboard after search
                 }
-                Toast.makeText(getContext(), "Success! " + narratives.size() + " results found.", Toast.LENGTH_LONG).show();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // We can choose to search as the user types, but for now, we'll only search on submit.
+                // If the user clears the text, clear the results.
+                if (newText.isEmpty()) {
+                    searchAdapter.submitList(null);
+                    emptyStateText.setVisibility(View.GONE);
+                }
+                return false;
             }
         });
+    }
 
-        searchViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+    private void setupObservers() {
+        // Observer for search results
+        searchViewModel.getSearchResults().observe(getViewLifecycleOwner(), (List<NarrativeDTO> narratives) -> {
+            boolean hasResults = narratives != null && !narratives.isEmpty();
+            searchAdapter.submitList(narratives);
+
+            // Only show empty state if not loading and list is empty/null
+            if (searchViewModel.getIsLoading().getValue() != null && !searchViewModel.getIsLoading().getValue()) {
+                emptyStateText.setVisibility(hasResults ? View.GONE : View.VISIBLE);
+            }
+            recyclerView.setVisibility(hasResults ? View.VISIBLE : View.GONE);
+        });
+
+        // Observer for loading state
+        searchViewModel.getIsLoading().observe(getViewLifecycleOwner(), (Boolean isLoading) -> {
+            loadingIndicator.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+
+            // Hide other views while loading
             if (isLoading) {
-                Log.d(TAG, "LOADING: API call in progress...");
-                Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d(TAG, "LOADING: API call finished.");
+                recyclerView.setVisibility(View.GONE);
+                emptyStateText.setVisibility(View.GONE);
             }
         });
 
+        // Observer for network errors
         searchViewModel.getNetworkError().observe(getViewLifecycleOwner(), errorMsg -> {
             if (errorMsg != null) {
-                Log.e(TAG, "FAILURE: " + errorMsg);
                 Toast.makeText(getContext(), "Error: " + errorMsg, Toast.LENGTH_LONG).show();
+                // Optionally show the error in the empty state TextView
+                emptyStateText.setText("An error occurred: " + errorMsg);
+                emptyStateText.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
             }
         });
     }
