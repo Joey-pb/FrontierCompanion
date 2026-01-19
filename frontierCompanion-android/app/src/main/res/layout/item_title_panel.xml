@@ -87,6 +87,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="-24dp">
 
+<!--            TODO: Enable Locate On Map button-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_locate_map"
                 style="@style/ThemeOverlay.Material3.Button"
@@ -101,6 +102,7 @@
                 tools:layout_editor_absoluteX="24dp"
                 tools:layout_editor_absoluteY="585dp" />
 
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_create_route"
                 style="@style/ThemeOverlay.Material3.Button"
@@ -109,7 +111,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="Create Route"
-                app:backgroundTint="@color/md_theme_secondary"
+                android:enabled="false"
+                app:backgroundTint="@color/md_theme_surfaceBright"
                 app:icon="@drawable/ic_create_route"
                 app:iconGravity="textStart"
                 tools:layout_editor_absoluteX="24dp"

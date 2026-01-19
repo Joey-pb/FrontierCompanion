@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">FrontierCompanion</string>
+    <string name="app_name">Frontier Companion</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="title_explore">Explore</string>
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_fragment_text_temp">This is where current, up-to-date information would go like events, blog posts, notices, general museum info, and visitor resources.</string>
     <string name="create_route">Create Route</string>
     <string name="view_exhibit">View Exhibit</string>
 </resources>
