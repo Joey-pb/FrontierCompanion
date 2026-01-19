@@ -8,12 +8,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +23,13 @@ import java.util.List;
 import wgu.jbas127.frontiercompanion.FrontierCompanionApplication;
 import wgu.jbas127.frontiercompanion.R;
 import wgu.jbas127.frontiercompanion.data.entities.Article;
+import wgu.jbas127.frontiercompanion.data.entities.Exhibit;
 import wgu.jbas127.frontiercompanion.data.entities.ExhibitPanel;
 import wgu.jbas127.frontiercompanion.data.repository.ExhibitRepository;
 import wgu.jbas127.frontiercompanion.ui.adapters.PanelAdapter;
 import wgu.jbas127.frontiercompanion.ui.models.DisplayableItem;
 import wgu.jbas127.frontiercompanion.ui.viewmodel.ExhibitDetailViewModel;
+import wgu.jbas127.frontiercompanion.ui.viewmodel.SharedViewModel;
 import wgu.jbas127.frontiercompanion.ui.viewmodel.ViewModelFactory;
 
 public class ExhibitDetailsFragment extends Fragment implements PanelAdapter.OnActionPanelClickListener{
@@ -33,6 +37,7 @@ public class ExhibitDetailsFragment extends Fragment implements PanelAdapter.OnA
     private ViewPager2 viewPager;
     private PanelAdapter panelAdapter;
     private ExhibitDetailViewModel viewModel;
+    private SharedViewModel sharedViewModel;
     private ProgressBar progressBar;
     private long exhibitId = -1;
 
@@ -66,6 +71,7 @@ public class ExhibitDetailsFragment extends Fragment implements PanelAdapter.OnA
         ExhibitRepository repository = ((FrontierCompanionApplication) requireActivity().getApplication()).exhibitRepository;
         ViewModelFactory factory = new ViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(ExhibitDetailViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         setupObservers();
 
@@ -112,6 +118,15 @@ public class ExhibitDetailsFragment extends Fragment implements PanelAdapter.OnA
     @Override
     public void onShowOnMapClicked(long exhibitId) {
         // TODO: Implement logic to open a map activity with the exhibit's coordinates
+        Exhibit exhibit = viewModel.selectedExhibit.getValue().exhibit;
+        if (exhibit != null) {
+            // Use the SharedViewModel to make the request
+            sharedViewModel.requestShowOnMap(exhibit);
+            // Navigate back to the previous screen (which should be the map)
+            NavHostFragment.findNavController(this).popBackStack();
+        } else {
+            Toast.makeText(getContext(), "Could not find exhibit.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
