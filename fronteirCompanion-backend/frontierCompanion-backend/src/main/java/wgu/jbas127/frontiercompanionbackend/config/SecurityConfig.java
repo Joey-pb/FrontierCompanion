@@ -41,7 +41,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
-                        ).permitAll()
+                        ).hasRole("ADMIN")
                         // Allow Android app and Admins API access
                         .requestMatchers("/api/**").hasAnyRole("ANDROID_APP", "ADMIN")
                         // All API endpoints require authentication
