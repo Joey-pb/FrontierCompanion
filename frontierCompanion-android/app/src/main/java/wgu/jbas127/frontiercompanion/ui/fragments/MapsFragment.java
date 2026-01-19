@@ -133,7 +133,7 @@ public class MapsFragment extends Fragment {
         if (mMap != null) {
             try {
                 mMap.setMyLocationEnabled(true);
-                mMap.setPadding(0, 50, 0, 0);
+                mMap.setPadding(0, 100, 0, 0);
             } catch (SecurityException e) {
                 e.printStackTrace();
                 Log.e("Location Error", "Unable to set MyLocation" + e.getMessage());
