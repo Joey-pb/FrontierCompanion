@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.Manifest;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -39,16 +41,19 @@ import java.util.concurrent.Executors;
 
 import wgu.jbas127.frontiercompanion.R;
 import wgu.jbas127.frontiercompanion.data.entities.Exhibit;
+import wgu.jbas127.frontiercompanion.data.models.Event;
 import wgu.jbas127.frontiercompanion.data.repository.ExhibitRepository;
 import wgu.jbas127.frontiercompanion.databinding.BottomSheetDetailsBinding;
+import wgu.jbas127.frontiercompanion.ui.viewmodel.SharedViewModel;
 
 public class MapsFragment extends Fragment {
 
     private GoogleMap mMap;
     private ExhibitRepository repository;
-
+    private SharedViewModel sharedViewModel;
     private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
     private BottomSheetDetailsBinding sheetBinding;
+    private Marker selectedMarker;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -73,6 +78,8 @@ public class MapsFragment extends Fragment {
 
         repository = new ExhibitRepository(requireActivity().getApplication());
 
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
         LinearLayout bottomSheetLayout = requireActivity().findViewById(R.id.details_bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
         sheetBinding = BottomSheetDetailsBinding.bind(bottomSheetLayout);
@@ -84,8 +91,11 @@ public class MapsFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+
+        observeRouteRequests();
+        observeShowOnMap();
     }
-    
+
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -98,6 +108,16 @@ public class MapsFragment extends Fragment {
             mMap.setOnMarkerClickListener(marker -> {
                 Exhibit exhibit = (Exhibit) marker.getTag();
                 if (exhibit != null) {
+
+                    // Reset the previously selected marker's color
+                    if (selectedMarker != null) {
+                        selectedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    }
+
+                    // Update the new selected marker and change its color
+                    selectedMarker = marker;
+                    selectedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
                     populateBottomSheet(exhibit);
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
@@ -111,13 +131,24 @@ public class MapsFragment extends Fragment {
             mMap.setOnMapClickListener(latLng -> {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
+                // Reset the selected marker's color when the map is clicked
+                if (selectedMarker != null) {
+                    selectedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    selectedMarker = null; // Clear the selection
+                }
+
                 if (bottomNavBehavior.isScrolledOut()) {
                     bottomNavBehavior.slideIn(bottomNavigationView);
                 }
             });
 
             checkLocationPermissionAndEnableLocation();
-            loadSitesOnMap();
+
+            if (sharedViewModel.isHandlingRequest()) {
+                loadSitesOnMap(false);
+            } else {
+                loadSitesOnMap(true);
+            }
         }
     };
 
@@ -135,62 +166,51 @@ public class MapsFragment extends Fragment {
                 mMap.setMyLocationEnabled(true);
                 mMap.setPadding(0, 100, 0, 0);
             } catch (SecurityException e) {
-                e.printStackTrace();
                 Log.e("Location Error", "Unable to set MyLocation" + e.getMessage());
             }
         }
     }
 
-    private void loadSitesOnMap() {
+    private void loadSitesOnMap(boolean shouldAnimateCamera) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-            Handler handler = new Handler(Looper.getMainLooper());
+        Handler handler = new Handler(Looper.getMainLooper());
 
-            executor.execute(() -> {
-                List<Exhibit> exhibitList = repository.getAllExhibitsSync();
+        executor.execute(() -> {
+            List<Exhibit> exhibitList = repository.getAllExhibitsSync();
 
-                handler.post(() -> {
-                    if (exhibitList == null || exhibitList.isEmpty()) {
-                        LatLng visitorCenter = new LatLng(38.124745, -79.050276);
-                        mMap.addMarker(new MarkerOptions().position(visitorCenter).title("No Exhibits Found"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(visitorCenter));
-                        return;
+            handler.post(() -> {
+                if (mMap == null) return;
+
+                if (exhibitList == null || exhibitList.isEmpty()) {
+                    LatLng visitorCenter = new LatLng(38.124745, -79.050276);
+                    mMap.addMarker(new MarkerOptions().position(visitorCenter).title("No Exhibits Found"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(visitorCenter));
+                    return;
+                }
+
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (Exhibit exhibit : exhibitList) {
+                    LatLng exhibitLocation = new LatLng(exhibit.getLatitude(), exhibit.getLongitude());
+
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(exhibitLocation)
+                            .title(exhibit.getName()));
+
+                    if (marker != null) {
+                        marker.setTag(exhibit);
                     }
 
-                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                    for (Exhibit exhibit : exhibitList) {
-                        LatLng exhibitLocation = new LatLng(exhibit.getLatitude(), exhibit.getLongitude());
+                    builder.include(exhibitLocation);
+                }
 
-                        Marker marker = mMap.addMarker(new MarkerOptions()
-                                .position(exhibitLocation)
-                                .title(exhibit.getName()));
-
-                        if (marker != null) {
-                            marker.setTag(exhibit);
-                        }
-
-                        builder.include(exhibitLocation);
-                    }
-
+                // Only animate the camera if requested
+                if (shouldAnimateCamera) {
                     LatLngBounds bounds = builder.build();
                     int padding = 150;
                     mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding), new GoogleMap.CancelableCallback() {
-
-                        @Override
-                        public void onCancel() {
-                            mMap.setLatLngBoundsForCameraTarget(bounds);
-                            mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            mMap.setLatLngBoundsForCameraTarget(bounds);
-                            mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
-                        }
-                    });
-                });
+                }
             });
+        });
     }
 
     private void populateBottomSheet(Exhibit exhibit) {
@@ -221,8 +241,60 @@ public class MapsFragment extends Fragment {
         });
 
         sheetBinding.routeButton.setOnClickListener(v -> {
-            // TODO: Implement route creation logic
-            Toast.makeText(super.getContext(), "Create route button clicked", Toast.LENGTH_SHORT).show();
+            Log.d("MapsFragment", "Route Requested for exhibit:" + exhibit.getName());
+            sharedViewModel.requestRoute(exhibit);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        });
+    }
+
+    private void observeRouteRequests() {
+        sharedViewModel.getRouteToExhibit().observe(getViewLifecycleOwner(), (Event<Exhibit> exhibitEvent) -> {
+            Exhibit destinationExhibit = exhibitEvent.getContentIfNotHandled();
+
+            if (destinationExhibit != null) {
+                Log.d("MapsFragment", "Route request event received for: " + destinationExhibit.getName());
+                Toast.makeText(getContext(), "Creating route to: " + destinationExhibit.getName(), Toast.LENGTH_SHORT).show();
+
+                // TODO: Implement route drawing logic.
+                // 1. Get user's current location
+                // 2. Create two LatLng points: one for the user, one for the destinationExhibit.
+                // 3. Call Google Directions API with these points.
+                // 4. Parse API response to get a polyline.
+                // 5. Draw the polyline on the mMap.
+                // 6. Adjust the camera bounds to fit the user and the destination.
+
+                // 5. Check if the destination marker is the currently selected one
+                if (selectedMarker != null && destinationExhibit.equals(selectedMarker.getTag())) {
+                    // Change the color of the selected marker to blue to indicate it's the route destination
+                    selectedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                }
+
+                // Logic placeholder: Move the camera to the destination.
+                LatLng destinationLatLng = new LatLng(destinationExhibit.getLatitude(), destinationExhibit.getLongitude());
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLng, 50f));
+            }
+        });
+    }
+
+    private void observeShowOnMap() {
+        sharedViewModel.getShowOnMapRequest().observe(getViewLifecycleOwner(), event -> {
+            Exhibit exhibitToShow = event.getContentIfNotHandled();
+            if (exhibitToShow != null && mMap != null) {
+                LatLng destinationLatLng = new LatLng(exhibitToShow.getLatitude(), exhibitToShow.getLongitude());
+
+                // Perform the zoom-in animation
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLng, 17f), new GoogleMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                        sharedViewModel.consumeRequest();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        sharedViewModel.consumeRequest();
+                    }
+                });
+            }
         });
     }
 
