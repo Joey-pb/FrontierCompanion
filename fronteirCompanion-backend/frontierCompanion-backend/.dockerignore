@@ -1,0 +1,21 @@
+# Maven build output
+target/
+
+# IDE files
+.idea/
+*.iml
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+HELP.md
+
+# Test resources
+src/test/
+
+# Docker files (avoid recursion)
+Dockerfile
+.dockerignore
