@@ -17,8 +17,8 @@ import wgu.jbas127.frontiercompanion.FrontierCompanionApplication;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "http://10.0.2.2:8080";
-
+    private static String baseUrl = null;
+    private static String apiKey = null;
     private static Retrofit retrofit = null;
     private static ApiService apiService = null;
 
@@ -26,7 +26,6 @@ public class RetrofitClient {
         if (apiService == null) {
             if (retrofit == null) {
                 Application app = FrontierCompanionApplication.getInstance();
-                String apiKey = "";
 
                 try {
                     // Read AndroidManifest metadata
@@ -34,8 +33,13 @@ public class RetrofitClient {
                             app.getPackageName(),
                             PackageManager.GET_META_DATA);
 
-                    Bundle bundle = appInfo.metaData;
-                    apiKey = bundle.getString("wgu.jbas127.frontiercompanion.FCMV_API_KEY");
+                    Bundle metaData = appInfo.metaData;
+
+                    if (metaData != null) {
+                        apiKey = metaData.getString("wgu.jbas127.frontiercompanion.FCMV_API_KEY");
+                        baseUrl = metaData.getString("wgu.jbas127.frontiercompanion.BACKEND_BASE_URL");
+                    }
+
                 } catch (PackageManager.NameNotFoundException e) {
                     Log.e("RetrofitClient", "Failed to load meta-data, NameNotFound: " + e.getMessage());
                 }
@@ -57,7 +61,7 @@ public class RetrofitClient {
 
                 // Build Retrofit
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(BASE_URL)
+                        .baseUrl(baseUrl)
                         .client(client)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
