@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="?attr/colorSurfaceDim"
+    android:fitsSystemWindows="true"
     tools:context=".ui.fragments.SearchFragment">
 
     <!-- The search bar at the top -->
@@ -14,14 +16,16 @@
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="?attr/actionBarSize"
+            app:contentInsetStart="0dp"
+            app:contentInsetEnd="8dp">
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:iconifiedByDefault="false"
-                app:queryHint="Search Narratives..." />
+                app:queryHint="Search..." />
 
         </androidx.appcompat.widget.Toolbar>
 

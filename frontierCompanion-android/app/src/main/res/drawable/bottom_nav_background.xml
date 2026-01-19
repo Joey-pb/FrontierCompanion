@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <!-- Set the background color -->
-    <solid android:color="@color/md_theme_surfaceDim" />
+    <solid android:color="?attr/colorSurfaceContainer" />
 
     <!-- Set the corner radius -->
     <corners

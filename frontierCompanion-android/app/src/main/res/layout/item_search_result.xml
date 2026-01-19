@@ -16,6 +16,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        app:cardBackgroundColor="?attr/colorSurfaceBright"
         app:cardElevation="4dp"
         app:cardCornerRadius="8dp">
 
@@ -39,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAppearance="?attr/textAppearanceTitleMedium"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:text="@{narrative.sectionName}"
                     tools:text="Why Are They Important?" />
 
@@ -47,6 +48,7 @@
                     android:id="@+id/expand_arrow_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:tint="?attr/colorOnSurfaceVariant"
                     android:src="@drawable/ic_expand_more" />
 
             </LinearLayout>
@@ -60,6 +62,7 @@
                 android:visibility="gone"
                 android:lineSpacingMultiplier="1.2"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurface"
                 android:text="@{narrative.content}"
                 tools:text="Skilled laborers like the blacksmith stand in contrast to the majority of immigrants to the Chesapeake colonies who were largely unskilled agricultural workers."
                 tools:visibility="visible" />

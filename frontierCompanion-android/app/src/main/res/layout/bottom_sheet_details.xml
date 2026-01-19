@@ -15,8 +15,8 @@
         android:id="@+id/exhibit_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:fontFamily="@font/cinzel_semibold"
+        android:textColor="?attr/colorOnSecondaryContainer"
         android:textAppearance="?attr/textAppearanceHeadline6"
         tools:text="African Savannah" />
 
@@ -28,6 +28,7 @@
         android:maxLines="3"
         android:ellipsize="end"
         android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorOnSecondaryContainer"
         tools:text="A sprawling exhibit featuring lions, giraffes, zebras, and elephants in a naturalistic habitat. Get a glimpse of the majestic wildlife of Africa." />
 
     <com.google.android.material.imageview.ShapeableImageView
