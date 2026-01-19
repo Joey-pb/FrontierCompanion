@@ -23,6 +23,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
         <meta-data
+            android:name="wgu.jbas127.frontiercompanion.FCMV_API_KEY"
+            android:value="${FCMV_API_KEY}" />
+        <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
@@ -34,9 +37,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ExhibitDetailActivity"
-            android:exported="false" />
     </application>
 
 </manifest>
