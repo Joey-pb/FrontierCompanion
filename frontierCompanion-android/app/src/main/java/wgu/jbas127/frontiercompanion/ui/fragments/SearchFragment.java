@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.List;
 
 import wgu.jbas127.frontiercompanion.R;
@@ -36,6 +37,8 @@ public class SearchFragment extends Fragment {
     private ProgressBar loadingIndicator;
     private TextView emptyStateText;
 
+    private FirebaseAnalytics firebaseAnalytics;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -50,6 +53,9 @@ public class SearchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Initialize Firebase Analytics
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
 
         // Initialize ViewModel and UI components
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
@@ -83,6 +89,10 @@ public class SearchFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query != null && !query.trim().isEmpty()) {
+                    // Log search query
+                    Bundle bundle = new Bundle();
+                    firebaseAnalytics.logEvent("search_requested", bundle);
+
                     searchViewModel.search(query.trim());
                     searchView.clearFocus(); // Hide keyboard after search
                 }
@@ -129,6 +139,11 @@ public class SearchFragment extends Fragment {
         // Observer for network errors
         searchViewModel.getNetworkError().observe(getViewLifecycleOwner(), errorMsg -> {
             if (errorMsg != null) {
+                // Log Network Errors
+                Bundle bundle = new Bundle();
+                bundle.putString("err_msg", errorMsg);
+                firebaseAnalytics.logEvent("network_error", bundle);
+
                 Toast.makeText(getContext(), "Error: " + errorMsg, Toast.LENGTH_LONG).show();
                 // Optionally show the error in the empty state TextView
                 emptyStateText.setText("An error occurred: " + errorMsg);
