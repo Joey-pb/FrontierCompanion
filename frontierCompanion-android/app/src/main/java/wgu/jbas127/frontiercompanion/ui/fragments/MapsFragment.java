@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.behavior.HideViewOnScrollBehavior;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -55,6 +56,8 @@ public class MapsFragment extends Fragment {
     private BottomSheetDetailsBinding sheetBinding;
     private Marker selectedMarker;
 
+    private FirebaseAnalytics firebaseAnalytics;
+
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -75,6 +78,9 @@ public class MapsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Initialize Firebase Analytics
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
 
         repository = new ExhibitRepository(requireActivity().getApplication());
 
@@ -108,6 +114,10 @@ public class MapsFragment extends Fragment {
             mMap.setOnMarkerClickListener(marker -> {
                 Exhibit exhibit = (Exhibit) marker.getTag();
                 if (exhibit != null) {
+                    // Log Bottom sheet populated
+                    Bundle bundle = new Bundle();
+                    bundle.putString("exhibit_name", exhibit.getName());
+                    firebaseAnalytics.logEvent("exhibit_marker_clicked", bundle);
 
                     // Reset the previously selected marker's color
                     if (selectedMarker != null) {
@@ -203,9 +213,12 @@ public class MapsFragment extends Fragment {
                     builder.include(exhibitLocation);
                 }
 
+                LatLngBounds bounds = builder.build();
+                mMap.setLatLngBoundsForCameraTarget(bounds);
+                mMap.setMinZoomPreference(16.0f);
+
                 // Only animate the camera if requested
                 if (shouldAnimateCamera) {
-                    LatLngBounds bounds = builder.build();
                     int padding = 150;
                     mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
                 }
@@ -231,6 +244,11 @@ public class MapsFragment extends Fragment {
         }
 
         sheetBinding.detailsButton.setOnClickListener(v -> {
+            // Log details button
+            Bundle bundle = new Bundle();
+            bundle.putString("exhibit_name", exhibit.getName());
+            firebaseAnalytics.logEvent("exhibit_details_clicked", bundle);
+
             MapsFragmentDirections.ActionMapsFragmentToExhibitDetailsFragment action =
                     MapsFragmentDirections.actionMapsFragmentToExhibitDetailsFragment(exhibit.getId());
 
