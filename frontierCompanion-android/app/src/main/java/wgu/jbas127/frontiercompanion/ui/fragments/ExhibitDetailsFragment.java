@@ -32,6 +32,7 @@ import wgu.jbas127.frontiercompanion.ui.viewmodel.ExhibitDetailViewModel;
 import wgu.jbas127.frontiercompanion.ui.viewmodel.SharedViewModel;
 import wgu.jbas127.frontiercompanion.ui.viewmodel.ViewModelFactory;
 
+// TODO: Implementation of Action Panels to display an Action Panel for articles and buttons (Create Route, and Back to Top)
 public class ExhibitDetailsFragment extends Fragment implements PanelAdapter.OnActionPanelClickListener{
 
     private ViewPager2 viewPager;
