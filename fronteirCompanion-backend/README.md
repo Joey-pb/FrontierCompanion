@@ -4,12 +4,12 @@
 
 ## Overview
 
----
+
 Frontier Companion Backend is a Spring Boot-based REST API that serves as the backbone for the Frontier Companion ecosystem. It provides AI-powered search, narrative generation, and analytics capabilities using Spring AI and PGVector.
 
+---
 ## Tech Stack
 
----
 - **Language:** Java 17
 - **Framework:** Spring Boot 3.5.x
 - **AI Integration:** Spring AI (OpenAI/OpenRouter)
@@ -18,17 +18,18 @@ Frontier Companion Backend is a Spring Boot-based REST API that serves as the ba
 - **Documentation:** SpringDoc OpenAPI (Swagger UI)
 - **Build Tool:** Maven
 
+---
 ## Requirements
 
----
+
 - Java 17 or higher
 - PostgreSQL with [PGVector extension](https://github.com/pgvector/pgvector) installed
 - Maven 3.x (or use the provided `mvnw`)
 - Docker (optional, for containerized deployment)
 
+---
 ## Setup & Installation
 
----
 ### 1. Database Setup
 Ensure you have a PostgreSQL instance running with the pgvector extension enabled.
 ```sql
@@ -53,10 +54,9 @@ The application requires several environment variables to function correctly. Yo
 ```bash
 ./mvnw clean install
 ```
-
+---
 ## Running the Application
 
----
 ### Local Development
 ```bash
 ./mvnw spring-boot:run
@@ -78,16 +78,17 @@ docker run -p 8080:8080 \
   frontier-companion-backend
 ```
 
+---
 ## Scripts & Commands
 
----
 - `./mvnw clean package`: Build the JAR file.
 - `./mvnw test`: Run unit and integration tests.
 - `./mvnw spring-boot:run`: Run the application locally.
 
+---
 ## Project Structure
 
----
+
 - `src/main/java/.../config`: Configuration classes (Security, OpenAPI, Vector store).
 - `src/main/java/.../controller`: REST controllers for Search, Analytics, Narrative, and Articles.
 - `src/main/java/.../dto`: Data Transfer Objects for API requests/responses.
@@ -97,18 +98,251 @@ docker run -p 8080:8080 \
 - `src/main/java/.../security`: Custom security filters (API Key authentication).
 - `src/main/resources/application.properties`: Main configuration file.
 
-## API Documentation
+---
+## Maintenance & Deployment
+
+- **Database Migrations:** Currently uses Hibernate `validate`. Ensure schema matches the entities.
+- **Deployment:** The application is Docker-ready and can be deployed to any platform supporting containers (e.g., Render, AWS ECS, Heroku).
+- **Security:** Ensure `ANDROID_API_KEY` is kept secret and rotated periodically.
 
 ---
+
+---
+# API Documentation
+
+This document provides a detailed overview of the REST API endpoints available in the Frontier Companion Backend.
+
 Once the application is running, you can access the Swagger UI at:
 `http://localhost:8080/swagger-ui.html`
 
 *Note: Accessing Swagger UI requires Admin credentials configured via `SWAGGER_USER` and `SWAGGER_PASSWORD`.*
 
-## Maintenance & Deployment
+## Authentication
+
+The API uses two types of authentication:
+
+1.  **API Key Authentication**: Used primarily by the Android application.
+    *   **Header**: `X-API-KEY`
+    *   **Required for**: All `/api/**` endpoints.
+2.  **Basic Authentication**: Used for administrative access (e.g., Swagger UI).
+    *   **Required for**: `/v3/api-docs/**`, `/swagger-ui/**`, `/swagger-ui.html`.
+
+Endpoints under `/api/**` require either a valid API key (matching `ANDROID_API_KEY`) or Basic Auth credentials for a user with the `ADMIN` role.
 
 ---
-- **Database Migrations:** Currently uses Hibernate `validate`. Ensure schema matches the entities.
-- **Deployment:** The application is Docker-ready and can be deployed to any platform supporting containers (e.g., Render, AWS ECS, Heroku).
-- **Security:** Ensure `ANDROID_API_KEY` is kept secret and rotated periodically.
+
+## Search APIs
+
+### Simple Search
+Performs a semantic search across articles and narratives.
+
+*   **URL**: `/api/search`
+*   **Method**: `GET`
+*   **Authentication**: Required (API Key or Basic Auth)
+*   **Parameters**:
+
+| Parameter | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `query` | String | Yes | - | The search query text. |
+| `limit` | Integer | No | `20` | Maximum number of results to return. |
+| `threshold` | Double | No | `0.3` | Similarity threshold for results (0.0 to 1.0). |
+
+*   **Success Response**:
+    *   **Code**: `200 OK`
+    *   **Body**: `SearchResultDTO`
+
+```json
+{
+  "articles": [
+    {
+      "id": 0,
+      "title": "string",
+      "description": "string",
+      "url": "string",
+      "thumbnailUrl": "string",
+      "author": "string",
+      "source": "string",
+      "publishedDate": "string"
+    }
+  ],
+  "narratives": [
+    {
+      "id": 0,
+      "exhibitId": 0,
+      "title": "string",
+      "content": "string",
+      "sectionName": "string"
+    }
+  ],
+  "totalResults": 0
+}
+```
+
+---
+
+## Analytics APIs
+
+### Download Search Analytics PDF
+Generates and downloads a PDF report of recent search queries.
+
+*   **URL**: `/api/analytics/search-analytics`
+*   **Method**: `GET`
+*   **Authentication**: Required (API Key or Basic Auth)
+*   **Parameters**:
+*
+| Parameter | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `limit` | Integer | No | `10` | Number of recent queries to include. |
+
+*   **Success Response**:
+    *   **Code**: `200 OK`
+    *   **Body**: Binary PDF file.
+    *   **Headers**: `Content-Type: application/pdf`, `Content-Disposition: attachment; filename=search-analytics-report.pdf`
+
+### Get Popular Queries
+Retrieves a list of the most frequent search terms.
+
+*   **URL**: `/api/analytics/popular`
+*   **Method**: `GET`
+*   **Authentication**: Required (API Key or Basic Auth)
+*   **Parameters**:
+
+| Parameter | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `limit` | Integer | No | `10` | Maximum number of queries to return. |
+
+*   **Success Response**:
+    *   **Code**: `200 OK`
+    *   **Body**: `List<String>` (e.g., `["query1", "query2"]`)
+
+### Get Recent Queries
+Retrieves a list of the most recent search queries with metadata.
+
+*   **URL**: `/api/analytics/recent`
+*   **Method**: `GET`
+*   **Authentication**: Required (API Key or Basic Auth)
+*   **Parameters**:
+*
+| Parameter | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `limit` | Integer | No | `10` | Maximum number of queries to return. |
+
+*   **Success Response**:
+    *   **Code**: `200 OK`
+    *   **Body**: `List<MostRecentQueryDTO>`
+
+```json
+[
+  {
+    "queryText": "string",
+    "resultCount": 0,
+    "clickedArticleId": 0,
+    "searchTimestamp": "2026-01-21T01:39:48.801Z"
+  }
+]
+```
+
+---
+
+## Article APIs
+
+### Get All Articles
+*   **URL**: `/api/articles`
+*   **Method**: `GET`
+*   **Success Response**: `200 OK`, `List<ArticleDTO>`
+
+### Get Article by ID
+*   **URL**: `/api/articles/{id}`
+*   **Method**: `GET`
+*   **Success Response**: `200 OK`, `ArticleDTO`
+
+### Get Articles by Exhibit
+*   **URL**: `/api/articles/exhibit/{exhibitId}`
+*   **Method**: `GET`
+*   **Success Response**: `200 OK`, `List<ArticleDTO>`
+
+### Create Article
+*   **URL**: `/api/articles`
+*   **Method**: `POST`
+*   **Body**: `Article` object
+    ```json
+    {
+      "title": "New Article",
+      "description": "Description",
+      "url": "https://unique-url.com",
+      "thumbnailUrl": "https://img.com",
+      "author": "Author",
+      "source": "Source",
+      "content": "Full article content...",
+      "publishedDate": "2023-10-27"
+    }
+    ```
+*   **Success Response**: `200 OK`, `Article` (created entity)
+
+### Update Article
+*   **URL**: `/api/articles/{id}`
+*   **Method**: `PUT`
+*   **Body**: `Article` object
+*   **Success Response**: `200 OK`, `Article` (updated entity)
+
+---
+
+## Narrative APIs
+
+### Upload Narrative Document
+Uploads a text file and processes it into narrative chunks for an exhibit.
+
+*   **URL**: `/api/narratives/upload`
+*   **Method**: `POST`
+*   **Body**: `multipart/form-data`
+    *   `file`: Text file (Required)
+    *   `exhibitId`: Long (Required)
+    *   `sectionName`: String (Optional)
+*   **Success Response**: `200 OK`, `List<Narrative>`
+
+### Get Narratives by Exhibit
+*   **URL**: `/api/narratives/exhibit/{exhibitId}`
+*   **Method**: `GET`
+*   **Success Response**: `200 OK`, `List<Narrative>`
+
+### Soft Delete Narratives for Exhibit
+Soft deletes all narratives for a specific exhibit (usually before a re-upload).
+
+*   **URL**: `/api/narratives/exhibit/{exhibitId}`
+*   **Method**: `DELETE`
+*   **Success Response**: `200 OK`, `String` (status message)
+
+### Restore Narratives for Exhibit
+Restores soft-deleted narratives for a specific exhibit.
+
+*   **URL**: `/api/narratives/exhibit/{id}/restore`
+*   **Method**: `PATCH`
+*   **Success Response**: `200 OK`, `String` (status message)
+
+---
+
+## Data Models
+
+### ArticleDTO
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` | Long | Unique identifier. |
+| `title` | String | Title of the article. |
+| `description` | String | Short summary. |
+| `url` | String | Link to full article. |
+| `thumbnailUrl` | String | Link to image. |
+| `author` | String | Author name. |
+| `source` | String | Original source. |
+| `publishedDate` | String | Date published (ISO-8601). |
+
+### Narrative
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` | Long | Unique identifier. |
+| `exhibitId` | Long | Associated exhibit ID. |
+| `title` | String | Title of the narrative. |
+| `content` | String | Narrative text content. |
+| `sectionName` | String | Categorization (e.g., 'Migration'). |
+| `deleted` | Boolean | Soft delete status. |
+
 
