@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/bottom_nav_background"
+        android:fitsSystemWindows="true"
         app:menu="@menu/bottom_nav_menu"
         app:layout_behavior="com.google.android.material.behavior.HideViewOnScrollBehavior"/>
 
