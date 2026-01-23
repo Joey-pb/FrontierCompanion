@@ -20,9 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import wgu.jbas127.frontiercompanion.data.dao.ArticleDao;
 import wgu.jbas127.frontiercompanion.data.dao.ExhibitDao;
-import wgu.jbas127.frontiercompanion.data.dao.ExhibitPanelDao;
 import wgu.jbas127.frontiercompanion.data.entities.Article;
 import wgu.jbas127.frontiercompanion.data.entities.Exhibit;
 import wgu.jbas127.frontiercompanion.data.entities.ExhibitPanel;
@@ -35,10 +33,6 @@ public class ExhibitRepositoryUnitTests {
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
     @Mock
     private ExhibitDao mockExhibitDao;
-    @Mock
-    private ExhibitPanelDao mockExhibitPanelDao;
-    @Mock
-    private ArticleDao mockArticleDao;
     @InjectMocks
     private ExhibitRepository repository;
 
