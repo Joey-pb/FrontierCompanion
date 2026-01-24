@@ -23,7 +23,7 @@ public class SearchController {
     private final SearchService searchService;
 
     /**
-     * Performs a simple semantic search based on a query parameter.
+     * Performs a semantic similarity-search based on a query parameter.
      * Results include both articles and narratives that exceed the similarity threshold.
      *
      * @param query     The search query text.
@@ -32,7 +32,7 @@ public class SearchController {
      * @return A {@link ResponseEntity} containing a {@link SearchResultDTO} with matched items.
      */
     @GetMapping
-    @Operation(summary = "Simple search with query parameter")
+    @Operation(summary = "Semantic similarity-search with query parameter")
     public ResponseEntity<SearchResultDTO> searchSimple(
             @RequestParam String query,
             @RequestParam(defaultValue = "20") Integer limit,
