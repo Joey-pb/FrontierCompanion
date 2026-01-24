@@ -1,4 +1,4 @@
-# Frontier Companion Backend
+# Frontier Companion Backend User Manual
 
 ---
 
@@ -133,7 +133,7 @@ Endpoints under `/api/**` require either a valid API key (matching `ANDROID_API_
 
 ## Search APIs
 
-### Simple Search
+### Semantic Search
 Performs a semantic search across articles and narratives.
 
 *   **URL**: `/api/search`
@@ -265,18 +265,36 @@ Retrieves a list of the most recent search queries with metadata.
 *   **URL**: `/api/articles`
 *   **Method**: `POST`
 *   **Body**: `Article` object
-    ```json
+
+```json
+{
+  "id": 0,
+  "title": "string",
+  "description": "string",
+  "url": "string",
+  "thumbnailUrl": "string",
+  "author": "string",
+  "source": "string",
+  "content": "string",
+  "publishedDate": "2026-01-23",
+  "createdAt": "2026-01-23T22:36:26.828Z",
+  "updatedAt": "2026-01-23T22:36:26.828Z",
+  "embedding": {
+    "type": "string",
+    "value": "string",
+    "null": true
+  },
+  "exhibitMappings": [
     {
-      "title": "New Article",
-      "description": "Description",
-      "url": "https://unique-url.com",
-      "thumbnailUrl": "https://img.com",
-      "author": "Author",
-      "source": "Source",
-      "content": "Full article content...",
-      "publishedDate": "2023-10-27"
+      "id": 0,
+      "exhibitId": 0,
+      "article": "string",
+      "displayOrder": 0,
+      "createdAt": "2026-01-23T22:36:26.828Z"
     }
-    ```
+  ]
+}
+```
 *   **Success Response**: `200 OK`, `Article` (created entity)
 
 ### Update Article
