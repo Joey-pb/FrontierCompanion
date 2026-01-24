@@ -1,12 +1,12 @@
 package wgu.jbas127.frontiercompanionbackend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import wgu.jbas127.frontiercompanionbackend.dto.NarrativeUploadForm;
 import wgu.jbas127.frontiercompanionbackend.entitiy.Narrative;
 import wgu.jbas127.frontiercompanionbackend.service.NarrativeService;
 
@@ -30,25 +30,18 @@ public class NarrativeController {
      * Uploads a narrative document for a specific exhibit.
      * The file is processed, chunked, and stored as narrative entities.
      *
-     * @param file        The text file containing the narrative content.
-     * @param exhibitId   The ID of the exhibit associated with the narrative.
-     * @param sectionName Optional name for the narrative section.
+     * @param form Form containing narrative file, exhibit ID, and optional section name.
      * @return A {@link ResponseEntity} containing the list of created {@link Narrative} entities,
      *         or a bad request response if processing fails.
      */
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload Narrative document",
             description = "Upload a text file containing narrative content for an exhibit")
-    public ResponseEntity<List<Narrative>> uploadNarrative(
-            @Parameter(description = "Text file with narrative content")
-            @RequestParam("file") MultipartFile file,
-            @Parameter(description = "Exhibit ID associated with narrative")
-            @RequestParam("exhibitId") Long exhibitId,
-            @Parameter(description = "Optional section name (e.g. 'Daily Life', 'Migration'")
-            @RequestParam(value = "sectionName", required = false) String sectionName){
+    public ResponseEntity<List<Narrative>> uploadNarrative(@ModelAttribute NarrativeUploadForm form) {
 
         try {
-            List<Narrative> narratives = narrativeService.processNarrativeDocument(file, exhibitId, sectionName);
+            List<Narrative> narratives =
+                    narrativeService.processNarrativeDocument(form.getFile(), form.getExhibitId(), form.getSectionName());
             return ResponseEntity.ok(narratives);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
