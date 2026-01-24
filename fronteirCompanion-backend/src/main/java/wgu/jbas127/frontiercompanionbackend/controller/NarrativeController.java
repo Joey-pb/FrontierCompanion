@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("api/narratives")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-@Tag(name = "Narratives", description = "")
+@Tag(name = "Narratives", description = "Narrative management")
 public class NarrativeController {
 
     private final NarrativeService narrativeService;
