@@ -72,7 +72,7 @@ public class SearchService {
         result.setNarratives(narratives.stream()
                 .map(this::convertNarrativeToDTO)
                 .collect(Collectors.toList()));
-        result.setTotalResults(articles.size());
+        result.setTotalResults(totalResults);
 
         return result;
     }
