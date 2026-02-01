@@ -7,22 +7,22 @@
       </SelectionState>
       <SelectionState runConfigName="MainActivity">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-01-19T05:47:13.072322800Z">
+        <DropdownSelection timestamp="2026-01-22T02:27:39.636430400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=24191FDF6009YW" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Joseph\.android\avd\Pixel_9.avd" />
             </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="AppDatabaseTests">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="ExhibitDaoTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="ExhibitRepositoryTests">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="Tests in 'wgu.jbas127.frontiercompanion'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
