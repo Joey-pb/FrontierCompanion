@@ -43,8 +43,8 @@ The **Home** screen is your hub for:
 The **Explore** section provides an interactive view of the museum.
 
 - **Locating Exhibits**: Red markers represent different exhibits across the grounds.
-- **Your Location**: If you grant location permissions, when at the museum, you can see your current position on the map, making it easy to find nearby sites.
-- **Quick View**: Tap on any red marker to see a summary of the exhibit in a bottom sheet. This includes:
+- **Your Location**: When location permissions are granted, while at the museum, your current position on the map is visible, making it easy to find nearby sites.
+- **Exhibit Details**: Tap on any red marker to see a summary of the exhibit in a bottom sheet. This includes:
   - The exhibit's name.
   - A brief description.
   - A preview image.
@@ -65,11 +65,12 @@ Looking for something specific? Use **AI-powered** semantic search in the **Sear
 
 ---
 
-When you select an exhibit from the Explore map, you can dive deep into its history:
+After selecting an exhibit from the Explore map, you can dive deep into its history:
 
-- **Guided Panels**: Swipe through educational panels that tell the story of the exhibit..
-- **Navigation Actions**:
+- **Guided Panels**: Swipe through educational panels that tell the story of the exhibit.
+- **Navigation**:
   - **Locate on Map**: Instantly switch back to the map view centered on this exhibit.
+  - **Create Route**: Currently disabled.
 
 ## Creating Routes (Future Release)
 
