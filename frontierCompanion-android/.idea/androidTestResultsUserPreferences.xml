@@ -129,10 +129,11 @@
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
                 <map>
-                  <entry key="Duration" value="90" />
+                  <entry key="Duration" value="144" />
                   <entry key="Google Pixel 6" value="120" />
                   <entry key="Medium_Phone_API_36.1" value="120" />
-                  <entry key="Tests" value="360" />
+                  <entry key="Pixel_9" value="248" />
+                  <entry key="Tests" value="502" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
