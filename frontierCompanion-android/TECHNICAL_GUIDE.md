@@ -1,4 +1,4 @@
-# Technical Guide: Frontier Companion
+# Frontier Companion (Android) Technical User Guide
 
 ---
 
