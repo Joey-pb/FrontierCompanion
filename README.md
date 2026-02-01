@@ -42,11 +42,11 @@ The project follows a three-tier architecture:
 ```
 frontier-companion/
 ├── frontierCompanion-backend/     # Spring Boot backend application
-│   └── API_USER_MANUAL.md         # Backend API documentation
+│   └── README.md                  # Backend API documentation
 ├── frontierCompanion-android/     # Android application
-│   ├── USER_GUIDE.md              # App user guide
+│   ├── README.md                  # App user guide
 │   └── TECHNICAL_GUIDE.md         # Android technical documentation
-└── README.md                       # This file
+└── README.md                      # This file
 ```
 
 ## Documentation
