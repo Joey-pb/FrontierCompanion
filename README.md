@@ -2,6 +2,17 @@
 
 An Android application for the Frontier Culture Museum of Virginia that provides visitors with semantic search capabilities across museum content and interactive exhibit exploration.
 
+<p align="center">
+  <img height="300" alt="Screenshot_20260202_231049" src="https://github.com/user-attachments/assets/27580251-1327-4535-a904-346fc1e5a883" />
+  
+  <img height="300" alt="Screenshot_20260202_231123" src="https://github.com/user-attachments/assets/b06b4020-a6f9-4fb9-9fa8-f3e961df8a02" />
+  
+  <img height="300" alt="Screenshot_20260202_231135" src="https://github.com/user-attachments/assets/6ec4de98-f850-41b5-aaf8-4984f7e5c6f7" />
+  
+  <img height="300" alt="Screenshot_20260202_231201" src="https://github.com/user-attachments/assets/3b3a0fa9-6263-44b8-bc8c-d5da5f456ea3" />
+</p>
+
+
 ## Overview
 
 Frontier Companion enhances the museum visitor experience by enabling natural language search across historical narratives from various exhibits and providing interactive map-based navigation. The application uses AI-powered semantic search to help visitors discover relevant content based on their interests.
